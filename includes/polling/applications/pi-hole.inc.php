@@ -13,6 +13,9 @@
  * @author     crcro <crc@nuamchefazi.ro>
 */
 
+
+use LibreNMS\Exceptions\JsonAppMissingKeysException;
+use LibreNMS\Exceptions\JsonAppException;
 use LibreNMS\RRD\RrdDefinition;
 
 $name = 'pi-hole';
