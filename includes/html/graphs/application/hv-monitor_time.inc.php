@@ -2,8 +2,8 @@
 
 $name = 'hv-monitor';
 $app_id = $app['app_id'];
-$unit_text = 'VM Statuses';
-$colours = 'Seconds';
+$unit_text = 'Seconds';
+$colours = 'psychedelic';
 $dostack = 0;
 $printtotal = 0;
 $addarea = 0;

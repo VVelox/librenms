@@ -81,8 +81,9 @@ $totals_fields = [
     'pmsuspended' => $return_data['totals']['pmsuspended'],
 ];
 
+$rrd_name = ['app', $name, $app_id];
 $tags = ['name' => $name, 'app_id' => $app_id, 'rrd_def' => $rrd_def, 'rrd_name' => $rrd_name];
-data_update($device, 'app', $tags, $fields);
+data_update($device, 'app', $tags, $totals_fields);
 
 //
 // handle each VM

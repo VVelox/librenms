@@ -29,42 +29,42 @@ if (Rrd::checkRrdExists($rrd_filename)) {
     ];
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'off_hard',
+        'descr'    => 'Off, Hard',
         'ds'       => 'off_hard',
     ];
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'off_soft',
+        'descr'    => 'Off, Soft',
         'ds'       => 'off_soft',
     ];
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'unknown',
+        'descr'    => 'Unknown',
         'ds'       => 'unknown',
     ];
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'paused',
+        'descr'    => 'Paused',
         'ds'       => 'paused',
     ];
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'crashed',
+        'descr'    => 'Crashed',
         'ds'       => 'crashed',
     ];
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'blocked',
+        'descr'    => 'Blocked',
         'ds'       => 'blocked',
     ];
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'nostate',
+        'descr'    => 'No State',
         'ds'       => 'nostate',
     ];
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'pmsuspended',
+        'descr'    => 'PM Suspended',
         'ds'       => 'pmsuspended',
     ];
 } else {
