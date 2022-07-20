@@ -4,7 +4,7 @@ $link_array = [
     'page'   => 'device',
     'device' => $device['device_id'],
     'tab'    => 'apps',
-    'app'    => 'suricata',
+    'app'    => 'hv-monitor',
 ];
 
 $graphs = [
@@ -14,6 +14,7 @@ $graphs = [
     'hv-monitor_pmem' => 'Total VM Memory Percent',
     'hv-monitor_pcpu' => 'Total VM CPU Percent',
     'hv-monitor_flt' => 'Total VM CPU Percent',
+    'hv-monitor_cow' => 'Total COWs For VM',
 ];
 
 foreach ($graphs as $key => $text) {
