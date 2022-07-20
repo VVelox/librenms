@@ -1,0 +1,39 @@
+<?php
+
+$name = 'hv-monitor';
+$app_id = $app['app_id'];
+$unit_text = 'Kilobytes';
+$colours = 'psychedelic';
+$dostack = 0;
+$printtotal = 0;
+$addarea = 0;
+$transparency = 15;
+
+if (isset($vars['vm'])) {
+    $rrd_filename = Rrd::name($device['hostname'], ['app', $name, $app['app_id'], 'vm', $vars['vm']]);
+} else {
+    $rrd_filename = Rrd::name($device['hostname'], ['app', $name, $app['app_id']]);
+}
+
+$rrd_list = [];
+if (Rrd::checkRrdExists($rrd_filename)) {
+    $rrd_list[] = [
+        'filename' => $rrd_filename,
+        'descr'    => 'Allocated',
+        'ds'       => 'mem_alloc',
+    ];
+    $rrd_list[] = [
+        'filename' => $rrd_filename,
+        'descr'    => 'RSS',
+        'ds'       => 'rss',
+    ];
+    $rrd_list[] = [
+        'filename' => $rrd_filename,
+        'descr'    => 'VSZ',
+        'ds'       => 'vsz',
+    ];
+} else {
+    d_echo('RRD "' . $rrd_filename . '" not found');
+}
+
+require 'includes/html/graphs/generic_multi_line.inc.php';
