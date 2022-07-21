@@ -25,7 +25,7 @@ $rrd_def = RrdDefinition::make()
     ->addDataset('minflt', 'DERIVE', 0)
     ->addDataset('pcpu', 'GAUGE', 0)
     ->addDataset('mem_alloc', 'GAUGE', 0)
-    ->addDataset('nvcsm', 'DERIVE', 0)
+    ->addDataset('nvcsw', 'DERIVE', 0)
     ->addDataset('snaps', 'GAUGE', 0)
     ->addDataset('rss', 'GAUGE', 0)
     ->addDataset('snaps_size', 'GAUGE', 0)
@@ -89,7 +89,9 @@ data_update($device, 'app', $tags, $totals_fields);
 // handle each VM
 //
 
+
 //
 // all done so update the app metrics
 //
-update_application($app, 'OK', $metrics);
+delete($return_data['hv']);'
+update_application($app, 'OK', $return_data);
