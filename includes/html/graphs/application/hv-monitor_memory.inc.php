@@ -27,11 +27,6 @@ if (Rrd::checkRrdExists($rrd_filename)) {
         'descr'    => 'RSS',
         'ds'       => 'rss',
     ];
-    $rrd_list[] = [
-        'filename' => $rrd_filename,
-        'descr'    => 'VSZ',
-        'ds'       => 'vsz',
-    ];
 } else {
     d_echo('RRD "' . $rrd_filename . '" not found');
 }
