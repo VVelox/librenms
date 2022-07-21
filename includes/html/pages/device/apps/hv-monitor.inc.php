@@ -1,5 +1,7 @@
 <?php
 
+$app_data = Application::find($app['app_id'])->data;
+
 $link_array = [
     'page'   => 'device',
     'device' => $device['device_id'],
@@ -7,15 +9,26 @@ $link_array = [
     'app'    => 'hv-monitor',
 ];
 
-$graphs = [
-    'hv-monitor_status' => 'VM Statuses Count',
-    'hv-monitor_memory' => 'Total VM Memmory Usage',
-    'hv-monitor_time' => 'Total VM CPU Time',
-    'hv-monitor_pmem' => 'Total VM Memory Percent',
-    'hv-monitor_pcpu' => 'Total VM CPU Percent',
-    'hv-monitor_flt' => 'Total VM CPU Percent',
-    'hv-monitor_cow' => 'Total COWs For VM',
-];
+$graphs = [];
+if (!isset($vars['vm'])) {
+    $graphs['hv-monitor_status'] = 'VM Statuses Count';
+}
+
+$graphs['hv-monitor_memory'] = 'VM Memmory Usage';
+$graphs['hv-monitor_time'] = 'VM CPU Time';
+$graphs['hv-monitor_pmem'] = 'Memory Percent';
+$graphs['hv-monitor_pcpu'] = 'CPU Percent';
+$graphs['hv-monitor_flt'] = 'Faults';
+$graphs['hv-monitor_cow'] = 'COWs';
+$graphs['hv-monitor_csw'] = 'Context Switches';
+$graphs['hv-monitor_etimes.inc'] = 'Etimes';
+$graphs['hv-monitor_disk-rw-blocks'] = 'Disk RW, Blocks';
+$graphs['hv-monitor_disk-rw-bytes'] = 'Disk RW, Bytes';
+$graphs['hv-monitor_disk-rw-reqs'] = 'Disk RW, Requests';
+$graphs['hv-monitor_disk-rw-time'] = 'Disk RW, Time';
+$graphs['hv-monitor_snaps'] = 'Snapshots';
+$graphs['hv-monitor_snaps_size'] = 'Snapshots Size';
+
 
 foreach ($graphs as $key => $text) {
     $graph_type = $key;
@@ -25,8 +38,8 @@ foreach ($graphs as $key => $text) {
     $graph_array['id'] = $app['app_id'];
     $graph_array['type'] = 'application_' . $key;
 
-    if (isset($vars['pool'])) {
-        $graph_array['pool'] = $vars['pool'];
+    if (isset($vars['vm'])) {
+        $graph_array['vm'] = $vars['vm'];
     }
 
     echo '<div class="panel panel-default">
