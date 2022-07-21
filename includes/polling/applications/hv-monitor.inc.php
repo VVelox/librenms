@@ -19,7 +19,7 @@ try {
 // totals graph stuff
 //
 $rrd_def = RrdDefinition::make()
-    ->addDataset('usertime', 'DERIVE', 0)
+    ->addDataset('usertime', 'DDERIVE', 0)
     ->addDataset('pmem', 'GAUGE', 0)
     ->addDataset('oublk', 'DERIVE', 0)
     ->addDataset('minflt', 'DERIVE', 0)
@@ -32,7 +32,7 @@ $rrd_def = RrdDefinition::make()
     ->addDataset('cpus', 'GAUGE', 0)
     ->addDataset('cow', 'DERIVE', 0)
     ->addDataset('nivcsw', 'DERIVE', 0)
-    ->addDataset('systime', 'DERIVE', 0)
+    ->addDataset('systime', 'DDERIVE', 0)
     ->addDataset('vsz', 'GAUGE', 0)
     ->addDataset('etimes', 'DERIVE', 0)
     ->addDataset('majflt', 'GAUGE', 0)
