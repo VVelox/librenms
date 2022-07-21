@@ -15,6 +15,8 @@ try {
     return;
 }
 
+$app_data['hv']=$return_data['hv'];
+
 //
 // totals graph stuff
 //
@@ -47,7 +49,16 @@ $rrd_def = RrdDefinition::make()
     ->addDataset('crashed', 'GAUGE', 0)
     ->addDataset('blocked', 'GAUGE', 0)
     ->addDataset('nostate', 'GAUGE', 0)
-    ->addDataset('pmsuspended', 'GAUGE', 0);
+    ->addDataset('pmsuspended', 'GAUGE', 0)
+    ->addDataset('rbytes', 'DERIVE', 0)
+    ->addDataset('rtime', 'DDERIVE', 0)
+    ->addDataset('rreqs', 'DERIVE', 0)
+    ->addDataset('wbytes', 'DERIVE', 0)
+    ->addDataset('wtime', 'DDERIVE', 0)
+    ->addDataset('wreqs', 'DERIVE', 0)
+    ->addDataset('disk_alloc', 'DERIVE', 0)
+    ->addDataset('disk_in_use', 'DERIVE', 0)
+    ->addDataset('disk_on_disk', 'DERIVE', 0);
 
 $totals_fields = [
     'usertime' => $return_data['totals']['usertime'],
@@ -79,6 +90,15 @@ $totals_fields = [
     'blocked' => $return_data['totals']['blocked'],
     'nostate' => $return_data['totals']['nostate'],
     'pmsuspended' => $return_data['totals']['pmsuspended'],
+    'rbytes' => $return_data['totals']['rbytes'],
+    'rtime' => $return_data['totals']['rtime'],
+    'rreqs' => $return_data['totals']['rreqs'],
+    'wbytes' => $return_data['totals']['wbytes'],
+    'wtime' => $return_data['totals']['wtime'],
+    'wreqs' => $return_data['totals']['wreqs'],
+    'disk_alloc' => $return_data['totals']['disk_alloc'],
+    'disk_in_use' => $return_data['totals']['disk_in_use'],
+    'disk_on_disk' => $return_data['totals']['disk_on_disk'],
 ];
 
 $rrd_name = ['app', $name, $app_id];
@@ -93,5 +113,5 @@ data_update($device, 'app', $tags, $totals_fields);
 //
 // all done so update the app metrics
 //
-delete($return_data['hv']);
-update_application($app, 'OK', $return_data);
+unset($return_data['hv']);
+update_application($app, 'OK', data_flatten($return_data));
