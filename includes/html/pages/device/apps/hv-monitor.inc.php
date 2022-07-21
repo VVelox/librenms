@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Application;
+
 $app_data = Application::find($app['app_id'])->data;
 
 $link_array = [
@@ -25,7 +27,9 @@ $graphs['hv-monitor_etimes.inc'] = 'Etimes';
 $graphs['hv-monitor_disk-rw-blocks'] = 'Disk RW, Blocks';
 $graphs['hv-monitor_disk-rw-bytes'] = 'Disk RW, Bytes';
 $graphs['hv-monitor_disk-rw-reqs'] = 'Disk RW, Requests';
-$graphs['hv-monitor_disk-rw-time'] = 'Disk RW, Time';
+if($app_data['hv'] != 'CBSD'){
+    $graphs['hv-monitor_disk-rw-time'] = 'Disk RW, Time';
+}
 $graphs['hv-monitor_snaps'] = 'Snapshots';
 $graphs['hv-monitor_snaps_size'] = 'Snapshots Size';
 
