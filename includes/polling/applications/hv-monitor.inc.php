@@ -93,5 +93,5 @@ data_update($device, 'app', $tags, $totals_fields);
 //
 // all done so update the app metrics
 //
-delete($return_data['hv']);'
+delete($return_data['hv']);
 update_application($app, 'OK', $return_data);
