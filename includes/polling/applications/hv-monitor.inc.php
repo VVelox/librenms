@@ -17,6 +17,10 @@ try {
 
 $app_data['hv']=$return_data['hv'];
 
+if (! is_array($app_data['VMs'])) {
+    $app_data['VMs'] = [];
+}
+
 //
 // totals graph stuff
 //
@@ -108,7 +112,78 @@ data_update($device, 'app', $tags, $totals_fields);
 //
 // handle each VM
 //
+$rrd_def = RrdDefinition::make()
+    ->addDataset('usertime', 'DDERIVE', 0)
+    ->addDataset('pmem', 'GAUGE', 0)
+    ->addDataset('oublk', 'DERIVE', 0)
+    ->addDataset('minflt', 'DERIVE', 0)
+    ->addDataset('pcpu', 'GAUGE', 0)
+    ->addDataset('mem_alloc', 'GAUGE', 0)
+    ->addDataset('nvcsw', 'DERIVE', 0)
+    ->addDataset('snaps', 'GAUGE', 0)
+    ->addDataset('rss', 'GAUGE', 0)
+    ->addDataset('snaps_size', 'GAUGE', 0)
+    ->addDataset('cpus', 'GAUGE', 0)
+    ->addDataset('cow', 'DERIVE', 0)
+    ->addDataset('nivcsw', 'DERIVE', 0)
+    ->addDataset('systime', 'DDERIVE', 0)
+    ->addDataset('vsz', 'GAUGE', 0)
+    ->addDataset('etimes', 'GAUGE', 0)
+    ->addDataset('majflt', 'GAUGE', 0)
+    ->addDataset('inblk', 'DERIVE', 0)
+    ->addDataset('nswap', 'GAUGE', 0)
+    ->addDataset('status_int', 'GAUGE', 0)
+    ->addDataset('rbytes', 'DERIVE', 0)
+    ->addDataset('rtime', 'DDERIVE', 0)
+    ->addDataset('rreqs', 'DERIVE', 0)
+    ->addDataset('wbytes', 'DERIVE', 0)
+    ->addDataset('wtime', 'DDERIVE', 0)
+    ->addDataset('wreqs', 'DERIVE', 0)
+    ->addDataset('disk_alloc', 'DERIVE', 0)
+    ->addDataset('disk_in_use', 'DERIVE', 0)
+    ->addDataset('disk_on_disk', 'DERIVE', 0);
 
+$VMs=[];
+foreach ($return_data['VMs'] as $vm => $vm_info) {
+    $VMs[]=$vm;
+
+    $vm_fields = [
+        'usertime' => $vm_info['usertime'],
+        'pmem' => $vm_info['pmem'],
+        'oublk' => $vm_info['oublk'],
+        'minflt' => $vm_info['minflt'],
+        'pcpu' => $vm_info['pcpu'],
+        'mem_alloc' => $vm_info['mem_alloc'],
+        'nvcsw' => $vm_info['nvcsw'],
+        'snaps' => $vm_info['snaps'],
+        'rss' => $vm_info['rss'],
+        'snaps_size' => $vm_info['snaps_size'],
+        'cpus' => $vm_info['cpus'],
+        'cow' => $vm_info['cow'],
+        'nivcsw' => $vm_info['nivcsw'],
+        'systime' => $vm_info['systime'],
+        'vsz' => $vm_info['vsz'],
+        'etimes' => $vm_info['etimes'],
+        'majflt' => $vm_info['majflt'],
+        'inblk' => $vm_info['inblk'],
+        'nswap' => $vm_info['nswap'],
+        'status_int' => $vm_info['status_int'],
+        'rbytes' => $vm_info['rbytes'],
+        'rtime' => $vm_info['rtime'],
+        'rreqs' => $vm_info['rreqs'],
+        'wbytes' => $vm_info['wbytes'],
+        'wtime' => $vm_info['wtime'],
+        'wreqs' => $vm_info['wreqs'],
+        'disk_alloc' => $vm_info['disk_alloc'],
+        'disk_in_use' => $vm_info['disk_in_use'],
+        'disk_on_disk' => $vm_info['disk_on_disk'],
+    ];
+
+    $rrd_name = ['app', $name, $app_id,'vm',$vm];
+    $tags = ['name' => $name, 'app_id' => $app_id, 'rrd_def' => $rrd_def, 'rrd_name' => $rrd_name];
+    data_update($device, 'app', $tags, $vm_fields);
+}
+$app_data['VMs'] = $VMs;
 
 //
 // all done so update the app metrics
