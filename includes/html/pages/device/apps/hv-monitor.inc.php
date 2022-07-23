@@ -1,8 +1,8 @@
 <?php
 
-$app_data = json_decode($app['data'], true);
+use App\Models\Port;
 
-sort($app_data['VMs']);
+sort($app->data['VMs']);
 
 $link_array = [
     'page'   => 'device',
@@ -20,8 +20,8 @@ if (!isset($vars['vm'])){
 }
 echo '<b> | VMs: </b>';
 $vm_int = 0;
-while (isset($app_data['VMs'][$vm_int])) {
-    $vm = $app_data['VMs'][$vm_int];
+while (isset($app->data['VMs'][$vm_int])) {
+    $vm = $app->data['VMs'][$vm_int];
     $label = $vm;
 
     if ($vars['vm'] == $vm) {
@@ -31,7 +31,7 @@ while (isset($app_data['VMs'][$vm_int])) {
     $vm_int++;
 
     $append = '';
-    if (isset($app_data['VMs'][$vm_int])) {
+    if (isset($app->data['VMs'][$vm_int])) {
         $append = ', ';
     }
 
@@ -41,7 +41,7 @@ while (isset($app_data['VMs'][$vm_int])) {
 if (isset($vars['vm'])){
     echo "<hr><b>Interfaces:</b> ";
     $if_links=[];
-    foreach ($app_data['VMifs'][$vars['vm']] as $vmif => $if_info) {
+    foreach ($app->data['VMifs'][$vars['vm']] as $vmif => $if_info) {
         $label = $vmif;
 
         if ($vars['vmif'] == $vmif) {
@@ -54,8 +54,8 @@ if (isset($vars['vm'])){
 
     echo "<br><b>Disks:</b> ";
     $disk_int = 0;
-    while (isset($app_data['VMdisks'][$vars['vm']][$disk_int])) {
-            $disk = $app_data['VMdisks'][$vars['vm']][$disk_int];
+    while (isset($app->data['VMdisks'][$vars['vm']][$disk_int])) {
+            $disk = $app->data['VMdisks'][$vars['vm']][$disk_int];
             $label = $disk;
 
             if ($vars['vmdisk'] == $disk) {
@@ -65,7 +65,7 @@ if (isset($vars['vm'])){
             $disk_int++;
 
             $append = '';
-            if (isset($app_data['VMdisks'][$vars['vm']][$vm_int])) {
+            if (isset($app->data['VMdisks'][$vars['vm']][$vm_int])) {
                 $append = ', ';
             }
 
@@ -78,11 +78,51 @@ if (isset($vars['vm'])){
 }
 
 if (isset($vars['vmif']) and isset($vars['vm'])) {
-    echo '<br>' .
-        '<b>MAC:</b> '.$app_data['VMifs'][$vars['vm']][$vars['vmif']]['mac'] .
-        '<br><b>HV if:</b> '.$app_data['VMifs'][$vars['vm']][$vars['vmif']]['if'];
-    if ($app_data['VMifs'][$vars['vm']][$vars['vmif']]['parent'] != '') {
-        echo '<br><b>HV parrent if:</b> '.$app_data['VMifs'][$vars['vm']][$vars['vmif']]['parent'];
+    $mac = $app->data['VMifs'][$vars['vm']][$vars['vmif']]['mac'];
+    $port = Port::with('device')->firstWhere(['ifPhysAddress' => str_replace(':', '', $mac)]);
+
+    echo "\n<br>\n" .
+        '<b>MAC:</b> '. $mac;
+    if (isset($port)) {
+        echo ' (' .
+               generate_device_link([device_id=>$port->device_id]) .
+               ', ' .
+               generate_port_link([
+                                   'label' => $port->label,
+                                   'port_id' => $port->port_id,
+                                   'ifName' => $port->ifName,
+                                   'device_id' => $port->device_id,
+                                  ]) .
+            ")";
+    }
+    echo "<br>\n";
+
+    $port = Port::with('device')->firstWhere(['device_id' => $app->device_id, 'ifName' => $app->data['VMifs'][$vars['vm']][$vars['vmif']]['if']]);
+    if (!isset($port)) {
+        echo '<b>HV if:</b> '.$app->data['VMifs'][$vars['vm']][$vars['vmif']]['if'] . "\n";
+    } else {
+        echo '<b>HV if:</b> ' .
+            generate_port_link([
+                'label' => $port->label,
+                'port_id' => $port->port_id,
+                'ifName' => $port->ifName,
+                'device_id' => $port->device_id,
+            ]);
+    }
+
+    if ($app->data['VMifs'][$vars['vm']][$vars['vmif']]['parent'] != '') {
+        $port = Port::with('device')->firstWhere(['device_id' => $app->device_id, 'ifName' => $app->data['VMifs'][$vars['vm']][$vars['vmif']]['parent']]);
+        if (!isset($port)) {
+            echo '<br><b>HV parrent if:</b> '.$app->data['VMifs'][$vars['vm']][$vars['vmif']]['parent'];
+        } else {
+            echo '<br><b>HV parrent if:</b> ' .
+                generate_port_link([
+                    'label' => $port->label,
+                    'port_id' => $port->port_id,
+                    'ifName' => $port->ifName,
+                    'device_id' => $port->device_id,
+                ]);
+        }
     }
 }
 
@@ -113,10 +153,10 @@ if (!isset($vars['vmdisk']) and !isset($vars['vmif'])) {
     $graphs['hv-monitor_disk-rw-blocks'] = 'Disk RW, Blocks';
     $graphs['hv-monitor_disk-rw-bytes'] = 'Disk RW, Bytes';
     $graphs['hv-monitor_disk-rw-reqs'] = 'Disk RW, Requests';
-    if($app_data['hv'] != 'CBSD'){
+    if($app->data['hv'] != 'CBSD'){
         $graphs['hv-monitor_disk-rw-time'] = 'Disk RW, Time';
     }
-    if($app_data['hv'] == 'libvirt'){
+    if($app->data['hv'] == 'libvirt'){
         $graphs['hv-monitor_disk-ftime'] = 'Disk Flush, Time';
         $graphs['hv-monitor_disk-freq'] = 'Disk Flush, Requests';
     }
