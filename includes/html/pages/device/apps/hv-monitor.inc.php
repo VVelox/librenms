@@ -2,8 +2,6 @@
 
 use App\Models\Port;
 
-sort($app->data['VMs']);
-
 $link_array = [
     'page'   => 'device',
     'device' => $device['device_id'],
@@ -19,27 +17,36 @@ if (!isset($vars['vm'])){
     echo generate_link('<b>Totals</b>', $link_array);
 }
 echo '<b> | VMs: </b>';
-$vm_int = 0;
-while (isset($app->data['VMs'][$vm_int])) {
-    $vm = $app->data['VMs'][$vm_int];
+$vm_links=[];
+foreach ($app->data['VMs'] as $vm) {
     $label = $vm;
 
     if ($vars['vm'] == $vm) {
         $label = '<span class="pagemenu-selected">' . $vm . '</span>';
     }
 
-    $vm_int++;
-
-    $append = '';
-    if (isset($app->data['VMs'][$vm_int])) {
-        $append = ', ';
-    }
-
-    echo generate_link($label, $link_array, ['vm'=>$vm]) . $append;
+    $vm_links[] = generate_link($label, $link_array, ['vm'=>$vm]);
 }
+echo implode(', ', $vm_links);
 
 if (isset($vars['vm'])){
-    echo "<hr><b>Interfaces:</b> ";
+    echo "<hr><b>Disks:</b> ";
+    $disk_links=[];
+    foreach ($app->data['VMdisks'][$vars['vm']] as $index => $disk) {
+            $label = $disk;
+
+            if ($vars['vmdisk'] == $disk) {
+                $label = '<span class="pagemenu-selected">' . $disk . '</span>';
+            }
+            if ($vars['vmdisk'] == $disk) {
+                $disk_links[] = $label;
+            } else {
+                $disk_links[] = generate_link($label, $link_array, ['vm' => $vars['vm'],'vmdisk'=>$disk]);
+            }
+    }
+    echo implode(', ', $disk_links);
+
+    echo "<br><b>Interfaces:</b> ";
     $if_links=[];
     foreach ($app->data['VMifs'][$vars['vm']] as $vmif => $if_info) {
         $label = $vmif;
@@ -51,30 +58,6 @@ if (isset($vars['vm'])){
        }
     }
     echo implode(', ', $if_links);
-
-    echo "<br><b>Disks:</b> ";
-    $disk_int = 0;
-    while (isset($app->data['VMdisks'][$vars['vm']][$disk_int])) {
-            $disk = $app->data['VMdisks'][$vars['vm']][$disk_int];
-            $label = $disk;
-
-            if ($vars['vmdisk'] == $disk) {
-                $label = '<span class="pagemenu-selected">' . $disk . '</span>';
-            }
-
-            $disk_int++;
-
-            $append = '';
-            if (isset($app->data['VMdisks'][$vars['vm']][$vm_int])) {
-                $append = ', ';
-            }
-
-            if ($vars['vmdisk'] == $disk) {
-                echo $label . $append;
-            } else {
-                echo generate_link($label, $link_array, ['vm' => $vars['vm'],'vmdisk'=>$disk]) . $append;
-            }
-    }
 }
 
 if (isset($vars['vmif']) and isset($vars['vm'])) {
@@ -97,6 +80,14 @@ if (isset($vars['vmif']) and isset($vars['vm'])) {
     }
     echo "<br>\n";
 
+    // This is likely to be unknown if the device is not up and running
+    //
+    // Likely not relevant for libvirt as it can't do interface re-use. And vnet interfaces are likely set to be ignored as
+    // it bringing them up and down spam the LibreNMS logs. Also massiving spams the RRD dir as well... even more so if
+    // it is a CAPE box.
+    // $config['bad_if'][] = 'vnet';  <--- a must for Libvirt boxes. :(
+    //
+    // Mainly for CBSD
     $port = Port::with('device')->firstWhere(['device_id' => $app->device_id, 'ifName' => $app->data['VMifs'][$vars['vm']][$vars['vmif']]['if']]);
     if (!isset($port)) {
         echo '<b>HV if:</b> '.$app->data['VMifs'][$vars['vm']][$vars['vmif']]['if'] . "\n";
@@ -110,12 +101,13 @@ if (isset($vars['vmif']) and isset($vars['vm'])) {
             ]);
     }
 
+    // Not likely to be known on Libvirt systems thanks to Libvirt sucking at reporting some info... and IF stuff in general
     if ($app->data['VMifs'][$vars['vm']][$vars['vmif']]['parent'] != '') {
         $port = Port::with('device')->firstWhere(['device_id' => $app->device_id, 'ifName' => $app->data['VMifs'][$vars['vm']][$vars['vmif']]['parent']]);
         if (!isset($port)) {
-            echo '<br><b>HV parrent if:</b> '.$app->data['VMifs'][$vars['vm']][$vars['vmif']]['parent'];
+            echo '<br><b>HV parent if:</b> '.$app->data['VMifs'][$vars['vm']][$vars['vmif']]['parent'];
         } else {
-            echo '<br><b>HV parrent if:</b> ' .
+            echo '<br><b>HV parent if:</b> ' .
                 generate_port_link([
                     'label' => $port->label,
                     'port_id' => $port->port_id,
@@ -142,17 +134,20 @@ if (!isset($vars['vm'])) {
 }
 
 if (!isset($vars['vmdisk']) and !isset($vars['vmif'])) {
+    if (isset($vars['vm'])) {
+        $graphs['hv-monitor_status-int'] = 'VM Status: 0=no state, 1=running, 2=blocked, 3=paused, 4=being shut down, 5=shut off, 6=crashed, 7=PM suspended, 8=Maintenance';
+    }
     $graphs['hv-monitor_memory'] = 'VM Memmory Usage';
     $graphs['hv-monitor_time'] = 'VM CPU Time';
     $graphs['hv-monitor_pmem'] = 'Memory Percent';
     $graphs['hv-monitor_pcpu'] = 'CPU Percent';
     $graphs['hv-monitor_flt'] = 'Faults';
-    $graphs['hv-monitor_cow'] = 'COWs';
     $graphs['hv-monitor_csw'] = 'Context Switches';
-    $graphs['hv-monitor_etimes'] = 'Etimes';
+    $graphs['hv-monitor_disk-size2'] = 'Disk Size';
     $graphs['hv-monitor_disk-rw-blocks'] = 'Disk RW, Blocks';
     $graphs['hv-monitor_disk-rw-bytes'] = 'Disk RW, Bytes';
     $graphs['hv-monitor_disk-rw-reqs'] = 'Disk RW, Requests';
+    $graphs['hv-monitor_cow'] = 'COWs';
     if($app->data['hv'] != 'CBSD'){
         $graphs['hv-monitor_disk-rw-time'] = 'Disk RW, Time';
     }
@@ -162,7 +157,27 @@ if (!isset($vars['vmdisk']) and !isset($vars['vmif'])) {
     }
     $graphs['hv-monitor_snaps'] = 'Snapshots';
     $graphs['hv-monitor_snaps_size'] = 'Snapshots Size';
+    $graphs['hv-monitor_etimes'] = 'Etimes';
+} elseif (isset($vars['vmdisk'])) {
+    $graphs['hv-monitor_disk-size'] = 'Size';
+    $graphs['hv-monitor_disk-rw-bytes'] = 'Disk RW, Bytes';
+    $graphs['hv-monitor_disk-rw-reqs'] = 'Disk RW, Requests';
+    if($app->data['hv'] != 'CBSD'){
+        $graphs['hv-monitor_disk-rw-time'] = 'Disk RW, Time';
+    }
+    if($app->data['hv'] == 'libvirt'){
+        $graphs['hv-monitor_disk-ftime'] = 'Disk Flush, Time';
+        $graphs['hv-monitor_disk-freq'] = 'Disk Flush, Requests';
+    }
+} elseif (isset($vars['vmif'])) {
+    $graphs['hv-monitor_net-pkts'] = 'Packets';
+    $graphs['hv-monitor_net-bytes'] = 'Bytes';
+    $graphs['hv-monitor_net-errs'] = 'Errors';
+    $graphs['hv-monitor_net-drops'] = 'Drops';
+    $graphs['hv-monitor_net-coll'] = 'Collisions';
 }
+
+
 
 
 foreach ($graphs as $key => $text) {
@@ -179,6 +194,10 @@ foreach ($graphs as $key => $text) {
 
     if (isset($vars['vmdisk'])) {
         $graph_array['vmdisk'] = $vars['vmdisk'];
+    }
+
+    if (isset($vars['vmif'])) {
+        $graph_array['vmif'] = $vars['vmif'];
     }
 
     echo '<div class="panel panel-default">
