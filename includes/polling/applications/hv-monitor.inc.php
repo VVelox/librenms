@@ -151,9 +151,9 @@ $vm_rrd_def = RrdDefinition::make()
     ->addDataset('wbytes', 'DERIVE', 0)
     ->addDataset('wtime', 'DDERIVE', 0)
     ->addDataset('wreqs', 'DERIVE', 0)
-    ->addDataset('disk_alloc', 'DERIVE', 0)
-    ->addDataset('disk_in_use', 'DERIVE', 0)
-    ->addDataset('disk_on_disk', 'DERIVE', 0);
+    ->addDataset('disk_alloc', 'GAUGE', 0)
+    ->addDataset('disk_in_use', 'GAUGE', 0)
+    ->addDataset('disk_on_disk', 'GAUGE', 0);
 
 $VMs=[];
 foreach ($return_data['VMs'] as $vm => $vm_info) {
