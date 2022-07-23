@@ -21,6 +21,18 @@ if (! is_array($app_data['VMs'])) {
     $app_data['VMs'] = [];
 }
 
+if (! is_array($app_data['VMdisks'])) {
+    $app_data['VMdisks'] = [];
+}
+
+if (! is_array($app_data['VMifs'])) {
+    $app_data['VMdifs'] = [];
+}
+
+if (! is_array($app_data['VMstatus'])) {
+    $app_data['VMdstatus'] = [];
+}
+
 //
 // totals graph stuff
 //
@@ -112,7 +124,7 @@ data_update($device, 'app', $tags, $totals_fields);
 //
 // handle each VM
 //
-$rrd_def = RrdDefinition::make()
+$vm_rrd_def = RrdDefinition::make()
     ->addDataset('usertime', 'DDERIVE', 0)
     ->addDataset('pmem', 'GAUGE', 0)
     ->addDataset('oublk', 'DERIVE', 0)
@@ -180,11 +192,100 @@ foreach ($return_data['VMs'] as $vm => $vm_info) {
     ];
 
     $rrd_name = ['app', $name, $app_id,'vm',$vm];
-    $tags = ['name' => $name, 'app_id' => $app_id, 'rrd_def' => $rrd_def, 'rrd_name' => $rrd_name];
+    $tags = ['name' => $name, 'app_id' => $app_id, 'rrd_def' => $vm_rrd_def, 'rrd_name' => $rrd_name];
     data_update($device, 'app', $tags, $vm_fields);
 }
 $app_data['VMs'] = $VMs;
 
+//
+// process each disk
+//
+$disk_rrd_def = RrdDefinition::make()
+    ->addDataset('in_use', 'GAUGE', 0)
+    ->addDataset('on_disk', 'GAUGE', 0)
+    ->addDataset('alloc', 'GAUGE', 0)
+    ->addDataset('rbytes', 'DERIVE', 0)
+    ->addDataset('rtime', 'DERIVE', 0)
+    ->addDataset('rreqs', 'DERIVE', 0)
+    ->addDataset('wbytes', 'DERIVE', 0)
+    ->addDataset('wtime', 'DERIVE', 0)
+    ->addDataset('wreqs', 'DERIVE', 0)
+    ->addDataset('ftime', 'DERIVE', 0)
+    ->addDataset('freqs', 'DERIVE', 0);
+
+
+
+foreach ($VMs as $vm) {
+    $vm_disks=[];
+
+    foreach ($return_data['VMs'][$vm]['disks'] as $disk => $disk_info) {
+        $vm_disks[]=$disk;
+
+        $disk_fields = [
+            'in_use' => $disk_info['in_use'],
+            'on_disk' => $disk_info['on_disk'],
+            'alloc' => $disk_info['alloc'],
+            'rbytes' => $disk_info['rbytes'],
+            'rtime' => $disk_info['rtime'],
+            'rreqs' => $disk_info['rreqs'],
+            'wbytes' => $disk_info['wbytes'],
+            'wtime' => $disk_info['wtime'],
+            'wreqs' => $disk_info['wreqs'],
+            'ftime' => $disk_info['ftime'],
+            'freqs' => $disk_info['freqs'],
+        ];
+
+        $rrd_name = ['app', $name, $app_id,'vmdisk',$vm,'__-__',$disk];
+        $tags = ['name' => $name, 'app_id' => $app_id, 'rrd_def' => $disk_rrd_def, 'rrd_name' => $rrd_name];
+        data_update($device, 'app', $tags, $disk_fields);
+    }
+
+    $app_data['VMdisks'][$vm]=$vm_disks;
+}
+
+//
+// process each if
+//
+$if_rrd_def = RrdDefinition::make()
+    ->addDataset('ipkts', 'DERIVE', 0)
+    ->addDataset('ierrs', 'DERIVE', 0)
+    ->addDataset('ibytes', 'DERIVE', 0)
+    ->addDataset('idrop', 'DERIVE', 0)
+    ->addDataset('opkts', 'DERIVE', 0)
+    ->addDataset('oerrs', 'DERIVE', 0)
+    ->addDataset('obytes', 'DERIVE', 0)
+    ->addDataset('odrop', 'DERIVE', 0)
+    ->addDataset('coll', 'DERIVE', 0);
+
+foreach ($VMs as $vm) {
+    $vm_ifs=[];
+
+    foreach ($return_data['VMs'][$vm]['ifs'] as $vm_if => $if_info) {
+        $vm_ifs[$vm_if]=[
+            'mac' => $if_info['mac'],
+            'parent' => $if_info['parent'],
+            'if' => $if_info['if'],
+        ];
+
+        $if_fields = [
+            'ipkts' => $if_info['ipkts'],
+            'ierrs' => $if_info['ierrs'],
+            'ibytes' => $if_info['ibytes'],
+            'idrop' => $if_info['idrop'],
+            'opkts' => $if_info['opkts'],
+            'oerrs' => $if_info['oerrs'],
+            'obytes' => $if_info['obytes'],
+            'odrop' => $if_info['odrop'],
+            'coll' => $if_info['coll'],
+        ];
+
+        $rrd_name = ['app', $name, $app_id,'vmif',$vm,'__-__',$vm_if];
+        $tags = ['name' => $name, 'app_id' => $app_id, 'rrd_def' => $if_rrd_def, 'rrd_name' => $rrd_name];
+        data_update($device, 'app', $tags, $if_fields);
+    }
+
+    $app_data['VMifs'][$vm]=$vm_ifs;
+}
 //
 // all done so update the app metrics
 //
