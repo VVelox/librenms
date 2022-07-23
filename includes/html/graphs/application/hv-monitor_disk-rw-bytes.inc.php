@@ -1,7 +1,6 @@
 <?php
 
 $name = 'hv-monitor';
-$app_id = $app['app_id'];
 $unit_text = 'Bytes/Second';
 $colours = 'psychedelic';
 $dostack = 0;
@@ -9,10 +8,12 @@ $printtotal = 0;
 $addarea = 0;
 $transparency = 15;
 
-if (isset($vars['vm'])) {
-    $rrd_filename = Rrd::name($device['hostname'], ['app', $name, $app['app_id'], 'vm', $vars['vm']]);
+if (isset($vars['vmdisk']) && isset($vars['vm'])) {
+    $rrd_filename = Rrd::name($device['hostname'], ['app', $name, $app->app_id, 'vmdisk', $vars['vm'],'__-__', $vars['vmdisk']]);
+} elseif (isset($vars['vm'])) {
+    $rrd_filename = Rrd::name($device['hostname'], ['app', $name, $app->app_id, 'vm', $vars['vm']]);
 } else {
-    $rrd_filename = Rrd::name($device['hostname'], ['app', $name, $app['app_id']]);
+    $rrd_filename = Rrd::name($device['hostname'], ['app', $name, $app->app_id]);
 }
 
 $rrd_list = [];
