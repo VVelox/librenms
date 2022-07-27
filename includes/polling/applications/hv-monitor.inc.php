@@ -74,7 +74,9 @@ $rrd_def = RrdDefinition::make()
     ->addDataset('wreqs', 'DERIVE', 0)
     ->addDataset('disk_alloc', 'GAUGE', 0)
     ->addDataset('disk_in_use', 'GAUGE', 0)
-    ->addDataset('disk_on_disk', 'GAUGE', 0);
+    ->addDataset('disk_on_disk', 'GAUGE', 0)
+    ->addDataset('ftime', 'DDERIVE', 0)
+    ->addDataset('freqs', 'DERIVE', 0);
 
 $totals_fields = [
     'usertime' => $return_data['totals']['usertime'],
@@ -115,6 +117,8 @@ $totals_fields = [
     'disk_alloc' => $return_data['totals']['disk_alloc'],
     'disk_in_use' => $return_data['totals']['disk_in_use'],
     'disk_on_disk' => $return_data['totals']['disk_on_disk'],
+    'ftime' => $return_data['totals']['ftime'],
+    'freqs' => $return_data['totals']['freqs'],
 ];
 
 $rrd_name = ['app', $name, $app_id];
@@ -153,7 +157,9 @@ $vm_rrd_def = RrdDefinition::make()
     ->addDataset('wreqs', 'DERIVE', 0)
     ->addDataset('disk_alloc', 'GAUGE', 0)
     ->addDataset('disk_in_use', 'GAUGE', 0)
-    ->addDataset('disk_on_disk', 'GAUGE', 0);
+    ->addDataset('disk_on_disk', 'GAUGE', 0)
+    ->addDataset('ftime', 'DDERIVE', 0)
+    ->addDataset('freqs', 'DERIVE', 0);
 
 $VMs=[];
 foreach ($return_data['VMs'] as $vm => $vm_info) {
@@ -189,12 +195,15 @@ foreach ($return_data['VMs'] as $vm => $vm_info) {
         'disk_alloc' => $vm_info['disk_alloc'],
         'disk_in_use' => $vm_info['disk_in_use'],
         'disk_on_disk' => $vm_info['disk_on_disk'],
+        'ftime' => $vm_info['ftime'],
+        'freqs' => $vm_info['freqs'],
     ];
 
     $rrd_name = ['app', $name, $app_id,'vm',$vm];
     $tags = ['name' => $name, 'app_id' => $app_id, 'rrd_def' => $vm_rrd_def, 'rrd_name' => $rrd_name];
     data_update($device, 'app', $tags, $vm_fields);
 }
+sort($VMs);
 $app_data['VMs'] = $VMs;
 
 //
@@ -205,12 +214,12 @@ $disk_rrd_def = RrdDefinition::make()
     ->addDataset('on_disk', 'GAUGE', 0)
     ->addDataset('alloc', 'GAUGE', 0)
     ->addDataset('rbytes', 'DERIVE', 0)
-    ->addDataset('rtime', 'DERIVE', 0)
+    ->addDataset('rtime', 'DDERIVE', 0)
     ->addDataset('rreqs', 'DERIVE', 0)
     ->addDataset('wbytes', 'DERIVE', 0)
-    ->addDataset('wtime', 'DERIVE', 0)
+    ->addDataset('wtime', 'DDERIVE', 0)
     ->addDataset('wreqs', 'DERIVE', 0)
-    ->addDataset('ftime', 'DERIVE', 0)
+    ->addDataset('ftime', 'DDERIVE', 0)
     ->addDataset('freqs', 'DERIVE', 0);
 
 
@@ -239,6 +248,7 @@ foreach ($VMs as $vm) {
         $tags = ['name' => $name, 'app_id' => $app_id, 'rrd_def' => $disk_rrd_def, 'rrd_name' => $rrd_name];
         data_update($device, 'app', $tags, $disk_fields);
     }
+    sort($vm_disks);
 
     $app_data['VMdisks'][$vm]=$vm_disks;
 }
@@ -287,7 +297,8 @@ foreach ($VMs as $vm) {
     $app_data['VMifs'][$vm]=$vm_ifs;
 }
 //
-// all done so update the app metrics
+// all done so update the app metrics and app_data
 //
+$app->data = $app_data;
 unset($return_data['hv']);
 update_application($app, 'OK', data_flatten($return_data));
