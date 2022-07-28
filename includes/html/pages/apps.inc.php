@@ -388,6 +388,20 @@ $graphs['chronyd'] = [
     'frequency',
     'root',
 ];
+$graphs['hv-monitor'] = [
+    'status',
+    'memory',
+    'pmem',
+    'time',
+    'pcpu',
+    'flt',
+    'csw',
+    'cow',
+    'etimes',
+    'snaps',
+    'snaps_size',
+];
+$graphs['cape
 
 echo '<div class="panel panel-default">';
 echo '<div class="panel-heading">';
