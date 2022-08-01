@@ -76,7 +76,16 @@ $rrd_def = RrdDefinition::make()
     ->addDataset('disk_in_use', 'GAUGE', 0)
     ->addDataset('disk_on_disk', 'GAUGE', 0)
     ->addDataset('ftime', 'DDERIVE', 0)
-    ->addDataset('freqs', 'DERIVE', 0);
+    ->addDataset('freqs', 'DERIVE', 0)
+    ->addDataset('ipkts', 'DERIVE', 0)
+    ->addDataset('ierrs', 'DERIVE', 0)
+    ->addDataset('ibytes', 'DERIVE', 0)
+    ->addDataset('idrop', 'DERIVE', 0)
+    ->addDataset('opkts', 'DERIVE', 0)
+    ->addDataset('oerrs', 'DERIVE', 0)
+    ->addDataset('obytes', 'DERIVE', 0)
+    ->addDataset('odrop', 'DERIVE', 0)
+    ->addDataset('coll', 'DERIVE', 0);
 
 $totals_fields = [
     'usertime' => $return_data['totals']['usertime'],
@@ -119,6 +128,15 @@ $totals_fields = [
     'disk_on_disk' => $return_data['totals']['disk_on_disk'],
     'ftime' => $return_data['totals']['ftime'],
     'freqs' => $return_data['totals']['freqs'],
+    'ipkts' => $return_data['totals']['ipkts'],
+    'ierrs' => $return_data['totals']['ierrs'],
+    'ibytes' => $return_data['totals']['ibytes'],
+    'idrop' => $return_data['totals']['idrop'],
+    'opkts' => $return_data['totals']['opkts'],
+    'oerrs' => $return_data['totals']['oerrs'],
+    'obytes' => $return_data['totals']['obytes'],
+    'odrop' => $return_data['totals']['odrop'],
+    'coll' => $return_data['totals']['coll'],
 ];
 
 $rrd_name = ['app', $name, $app_id];
@@ -159,7 +177,16 @@ $vm_rrd_def = RrdDefinition::make()
     ->addDataset('disk_in_use', 'GAUGE', 0)
     ->addDataset('disk_on_disk', 'GAUGE', 0)
     ->addDataset('ftime', 'DDERIVE', 0)
-    ->addDataset('freqs', 'DERIVE', 0);
+    ->addDataset('freqs', 'DERIVE', 0)
+    ->addDataset('ipkts', 'DERIVE', 0)
+    ->addDataset('ierrs', 'DERIVE', 0)
+    ->addDataset('ibytes', 'DERIVE', 0)
+    ->addDataset('idrop', 'DERIVE', 0)
+    ->addDataset('opkts', 'DERIVE', 0)
+    ->addDataset('oerrs', 'DERIVE', 0)
+    ->addDataset('obytes', 'DERIVE', 0)
+    ->addDataset('odrop', 'DERIVE', 0)
+    ->addDataset('coll', 'DERIVE', 0);
 
 $VMs=[];
 foreach ($return_data['VMs'] as $vm => $vm_info) {
@@ -197,6 +224,15 @@ foreach ($return_data['VMs'] as $vm => $vm_info) {
         'disk_on_disk' => $vm_info['disk_on_disk'],
         'ftime' => $vm_info['ftime'],
         'freqs' => $vm_info['freqs'],
+        'ipkts' => $vm_info['ipkts'],
+        'ierrs' => $vm_info['ierrs'],
+        'ibytes' => $vm_info['ibytes'],
+        'idrop' => $vm_info['idrop'],
+        'opkts' => $vm_info['opkts'],
+        'oerrs' => $vm_info['oerrs'],
+        'obytes' => $vm_info['obytes'],
+        'odrop' => $vm_info['odrop'],
+        'coll' => $vm_info['coll'],
     ];
 
     $rrd_name = ['app', $name, $app_id,'vm',$vm];

@@ -1,7 +1,7 @@
 <?php
 
 $name = 'hv-monitor';
-$unit_text = 'IO Time Seconds/Second';
+$unit_text = 'msecs/sec';
 $colours = 'psychedelic';
 $dostack = 0;
 $printtotal = 0;
@@ -25,6 +25,7 @@ if (Rrd::checkRrdExists($rrd_filename)) {
         'filename' => $rrd_filename,
         'descr'    => 'Write',
         'ds'       => 'wtime',
+        'invert'   => true
     ];
 } else {
     d_echo('RRD "' . $rrd_filename . '" not found');

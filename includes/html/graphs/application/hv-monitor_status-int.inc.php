@@ -1,11 +1,11 @@
 <?php
 
 $name = 'hv-monitor';
-$unit_text = 'Seconds';
+$unit_text = 'VM Statuses';
 $colours = 'psychedelic';
 $dostack = 1;
-$printtotal = 1;
-$addarea = 1;
+$printtotal = 0;
+$addarea = 0;
 $transparency = 15;
 
 if (isset($vars['vm'])) {
@@ -18,13 +18,8 @@ $rrd_list = [];
 if (Rrd::checkRrdExists($rrd_filename)) {
     $rrd_list[] = [
         'filename' => $rrd_filename,
-        'descr'    => 'User',
-        'ds'       => 'usertime',
-    ];
-    $rrd_list[] = [
-        'filename' => $rrd_filename,
-        'descr'    => 'Sys',
-        'ds'       => 'systime',
+        'descr'    => 'Status',
+        'ds'       => 'status_int',
     ];
 } else {
     d_echo('RRD "' . $rrd_filename . '" not found');

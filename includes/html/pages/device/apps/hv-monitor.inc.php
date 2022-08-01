@@ -29,8 +29,37 @@ foreach ($app->data['VMs'] as $vm) {
 }
 echo implode(', ', $vm_links);
 
+if (!isset($vars['vmif']) && !isset($vars['vmdisk'])){
+    if (!isset($vars['vmpage'])) {
+        $vars['vmpage'] = 'general';
+    }
+}
+
+echo '<br><b>Pages: </b>';
+if ($vars['vmpage'] == 'general') {
+    $page_links[]='<span class="pagemenu-selected">General</span>';
+} else {
+    $page_links[]=generate_link('General', $link_array, ['vm' => $vars['vm'],'vmpage'=>'general']);
+}
+if ($vars['vmpage'] == 'disk') {
+    $page_links[]='<span class="pagemenu-selected">Disk</span>';
+} else {
+    $page_links[]=generate_link('Disk', $link_array, ['vm' => $vars['vm'],'vmpage'=>'disk']);
+}
+if ($vars['vmpage'] == 'network') {
+    $page_links[]='<span class="pagemenu-selected">Network</span>';
+} else {
+    $page_links[]=generate_link('Network', $link_array, ['vm' => $vars['vm'],'vmpage'=>'network']);
+}
+if ($vars['vmpage'] == 'Snapshots') {
+    $page_links[]='<span class="pagemenu-selected">Network</span>';
+} else {
+     $page_links[]=generate_link('Snapshots', $link_array, ['vm' => $vars['vm'],'vmpage'=>'snapshots']);
+}
+echo implode(', ', $page_links);
+
 if (isset($vars['vm'])){
-    echo "<hr><b>Disks:</b> ";
+    echo '<hr><b>Disks:</b> ';
     $disk_links=[];
     foreach ($app->data['VMdisks'][$vars['vm']] as $index => $disk) {
             $label = $disk;
@@ -129,35 +158,62 @@ $link_array = [
 ];
 
 $graphs = [];
-if (!isset($vars['vm'])) {
+if (!isset($vars['vm']) && isset($vars['vmpage']) && $vars['vmpage'] == 'general') {
     $graphs['hv-monitor_status'] = 'VM Statuses Count';
 }
 
 if (!isset($vars['vmdisk']) and !isset($vars['vmif'])) {
-    if (isset($vars['vm'])) {
-        $graphs['hv-monitor_status-int'] = 'VM Status: 0=no state, 1=running, 2=blocked, 3=paused, 4=being shut down, 5=shut off, 6=crashed, 7=PM suspended, 8=Maintenance';
+    if (isset($vars['vmpage']) && $vars['vmpage'] == 'general') {
+        if (isset($vars['vm']) && $app->data['hv'] == 'libvirt') {
+            $graphs['hv-monitor_status-int'] = 'VM Status: 0=no state, 1=running, 2=blocked, 3=paused, 4=being shut down, 5=shut off, 6=crashed, 7=PM suspended';
+        }
+        if (isset($vars['vm']) && $app->data['hv'] == 'CBSD') {
+            $graphs['hv-monitor_status-int'] = 'VM Status: 1=Running, 8=Shut Off, 9=Maintenace';
+        }
+        $graphs['hv-monitor_memory'] = 'Memmory Usage';
+        $graphs['hv-monitor_pmem'] = 'Memory Percent';
+        $graphs['hv-monitor_time'] = 'CPU Time';
+        $graphs['hv-monitor_pcpu'] = 'CPU Percent';
+        $graphs['hv-monitor_flt'] = 'Faults';
+        $graphs['hv-monitor_csw'] = 'Context Switches';
+        $graphs['hv-monitor_etimes'] = 'Etimes';
     }
-    $graphs['hv-monitor_memory'] = 'VM Memmory Usage';
-    $graphs['hv-monitor_time'] = 'VM CPU Time';
-    $graphs['hv-monitor_pmem'] = 'Memory Percent';
-    $graphs['hv-monitor_pcpu'] = 'CPU Percent';
-    $graphs['hv-monitor_flt'] = 'Faults';
-    $graphs['hv-monitor_csw'] = 'Context Switches';
-    $graphs['hv-monitor_disk-size2'] = 'Disk Size';
-    $graphs['hv-monitor_disk-rw-blocks'] = 'Disk RW, Blocks';
-    $graphs['hv-monitor_disk-rw-bytes'] = 'Disk RW, Bytes';
-    $graphs['hv-monitor_disk-rw-reqs'] = 'Disk RW, Requests';
-    $graphs['hv-monitor_cow'] = 'COWs';
-    if($app->data['hv'] != 'CBSD'){
-        $graphs['hv-monitor_disk-rw-time'] = 'Disk RW, Time';
+
+    if (isset($vars['vmpage']) && $vars['vmpage'] == 'disk') {
+        $graphs['hv-monitor_disk-size2'] = 'Disk Size';
+        // Linux does not support fetching block IO for procs
+        if($app->data['hv'] != 'libvirt'){
+            $graphs['hv-monitor_disk-rw-blocks'] = 'Disk RW, Blocks';
+        }
+        $graphs['hv-monitor_disk-rw-bytes'] = 'Disk RW, Bytes';
+        $graphs['hv-monitor_disk-rw-reqs'] = 'Disk RW, Requests';
+        $graphs['hv-monitor_cow'] = 'COWs';
+        if($app->data['hv'] == 'CBSD'){
+            $graphs['hv-monitor_disk-rw-time'] = 'Disk RW, Time';
+        }
+        // does not appear to be a tracked stat on FreeBSD
+        if($app->data['hv'] == 'libvirt'){
+            $graphs['hv-monitor_disk-ftime'] = 'Disk Flush, Time';
+            $graphs['hv-monitor_disk-freqs'] = 'Disk Flush, Requests';
+        }
     }
-    if($app->data['hv'] == 'libvirt'){
-        $graphs['hv-monitor_disk-ftime'] = 'Disk Flush, Time';
-        $graphs['hv-monitor_disk-freq'] = 'Disk Flush, Requests';
+
+    if (isset($vars['vmpage']) && $vars['vmpage'] == 'snapshots') {
+        $graphs['hv-monitor_snaps'] = 'Snapshots';
+        // curious not supported by libvirt
+        // CBSD and other future bhyve based ones this is easy to get if using ZFS
+        if($app->data['hv'] == 'CBSD'){
+            $graphs['hv-monitor_snaps_size'] = 'Snapshots Size';
+        }
     }
-    $graphs['hv-monitor_snaps'] = 'Snapshots';
-    $graphs['hv-monitor_snaps_size'] = 'Snapshots Size';
-    $graphs['hv-monitor_etimes'] = 'Etimes';
+
+    if (isset($vars['vmpage']) && $vars['vmpage'] == 'network') {
+        $graphs['hv-monitor_net-pkts'] = 'Network Packets';
+        $graphs['hv-monitor_net-bytes'] = 'Network Bytes';
+        $graphs['hv-monitor_net-errs'] = 'Network Errors';
+        $graphs['hv-monitor_net-drops'] = 'Network Drops';
+        $graphs['hv-monitor_net-coll'] = 'Network Collisions';
+    }
 } elseif (isset($vars['vmdisk'])) {
     $graphs['hv-monitor_disk-size'] = 'Size';
     $graphs['hv-monitor_disk-rw-bytes'] = 'Disk RW, Bytes';
@@ -167,7 +223,7 @@ if (!isset($vars['vmdisk']) and !isset($vars['vmif'])) {
     }
     if($app->data['hv'] == 'libvirt'){
         $graphs['hv-monitor_disk-ftime'] = 'Disk Flush, Time';
-        $graphs['hv-monitor_disk-freq'] = 'Disk Flush, Requests';
+        $graphs['hv-monitor_disk-freqs'] = 'Disk Flush, Requests';
     }
 } elseif (isset($vars['vmif'])) {
     $graphs['hv-monitor_net-pkts'] = 'Packets';
@@ -199,6 +255,8 @@ foreach ($graphs as $key => $text) {
     if (isset($vars['vmif'])) {
         $graph_array['vmif'] = $vars['vmif'];
     }
+
+    $graph_array['hv'] = $app->data['hv'];
 
     echo '<div class="panel panel-default">
     <div class="panel-heading">
