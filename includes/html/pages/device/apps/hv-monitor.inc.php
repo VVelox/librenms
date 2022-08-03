@@ -95,7 +95,7 @@ if (isset($vars['vmif']) and isset($vars['vm'])) {
 
     echo "\n<br>\n" .
         '<b>MAC:</b> '. $mac;
-    if (isset($port)) {
+    if (isset($port) && isset($mac) && $mac != '') {
         echo ' (' .
                generate_device_link([device_id=>$port->device_id]) .
                ', ' .
