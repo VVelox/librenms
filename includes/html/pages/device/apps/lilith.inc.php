@@ -2,11 +2,11 @@
 
 if (! isset($vars['lilithType'])) {
     $vars['lilithType'] = 'combined';
-}else{
-    if ( $vars['lilithType'] != 'general' &&
+} else {
+    if ($vars['lilithType'] != 'general' &&
          $vars['lilithType'] != 'sagan' &&
          $vars['lilithType'] != 'suricata'
-        ){
+        ) {
         $vars['lilithType'] = 'combined';
     }
 }
@@ -88,19 +88,19 @@ foreach ($sagan_found_rrds as $value) {
 print_optionbar_start();
 
     $link_tmp = generate_link('Combined', $link_array, ['app'=>'lilith', 'lilithType'=>'combined']);
-    if (isset($vars['lilithType']) && $vars['lilithType'] == 'combined'){
+    if (isset($vars['lilithType']) && $vars['lilithType'] == 'combined') {
         $link_tmp = '<span class="pagemenu-selected">' . $link_tmp . '</span>';
     }
     echo $link_tmp.' | ';
 
     $link_tmp = generate_link('Sagan', $link_array, ['app'=>'lilith', 'lilithType'=>'sagan']);
-    if (isset($vars['lilithType']) && $vars['lilithType'] == 'sagan'){
+    if (isset($vars['lilithType']) && $vars['lilithType'] == 'sagan') {
         $link_tmp = '<span class="pagemenu-selected">' . $link_tmp . '</span>';
     }
     echo $link_tmp.' | ';
 
     $link_tmp = generate_link('Suricata', $link_array, ['app'=>'lilith', 'lilithType'=>'suricata']);
-    if (isset($vars['lilithType']) && $vars['lilithType'] == 'suricata'){
+    if (isset($vars['lilithType']) && $vars['lilithType'] == 'suricata') {
         $link_tmp = '<span class="pagemenu-selected">' . $link_tmp . '</span>';
     }
     echo $link_tmp;
@@ -114,7 +114,7 @@ print_optionbar_start();
             $link_switches['lilithInstance']=$vars['lilithInstance'];
         }
         $link_tmp = generate_link($value, $link_array, $link_switches);
-        if (isset($vars['lilithCat']) && $vars['lilithCat'] == $value){
+        if (isset($vars['lilithCat']) && $vars['lilithCat'] == $value) {
             $link_tmp = '<span class="pagemenu-selected">' . $link_tmp . '</span>';
         }
         array_push($category_array, $link_tmp);
@@ -124,9 +124,9 @@ print_optionbar_start();
     if (sizeof($current['sagan']) > 0) {
         echo "<br>\n<b>Sagan Instances:</b> ";
         $sagan_array=array();
-        foreach($current['sagan'] as $key => $value){
+        foreach ($current['sagan'] as $key => $value) {
             $link_tmp = generate_link($key, $link_array, ['app'=>'lilith', 'lilithType'=>'sagan', 'lilithInstance'=>$key]);
-            if (isset($vars['lilithInstance']) && isset($vars['lilithType']) && $vars['lilithType'] == 'sagan' && $vars['lilithInstance'] == $key){
+            if (isset($vars['lilithInstance']) && isset($vars['lilithType']) && $vars['lilithType'] == 'sagan' && $vars['lilithInstance'] == $key) {
                 $link_tmp = '<span class="pagemenu-selected">' . $link_tmp . '</span>';
             }
             array_push($sagan_array, $link_tmp);
@@ -137,9 +137,9 @@ print_optionbar_start();
     if (sizeof($current['suricata']) > 0) {
         echo "<br>\n<b>Suricata Instances:</b> ";
         $suricata_array=array();
-        foreach($current['suricata'] as $key => $value){
+        foreach ($current['suricata'] as $key => $value) {
             $link_tmp=generate_link($key, $link_array, ['app'=>'lilith', 'lilithType'=>'suricata', 'lilithInstance'=>$key]);
-            if (isset($vars['lilithInstance']) && isset($vars['lilithType']) && $vars['lilithType'] == 'suricata' && $vars['lilithInstance'] == $key){
+            if (isset($vars['lilithInstance']) && isset($vars['lilithType']) && $vars['lilithType'] == 'suricata' && $vars['lilithInstance'] == $key) {
                 $link_tmp = '<span class="pagemenu-selected">' . $link_tmp . '</span>';
             }
             array_push($suricata_array, $link_tmp);
@@ -150,17 +150,17 @@ print_optionbar_start();
 print_optionbar_end();
 
 
-if (isset($vars['lilithType']) && $vars['lilithType'] == 'sagan'){
+if (isset($vars['lilithType']) && $vars['lilithType'] == 'sagan') {
     $graphs = [
         'lilith_sagan_total' => ['text'=>'Sagan Total'],
         'lilith_sagan_totals' => ['text'=>'Sagan Totals Per Category']
     ];
-}elseif(isset($vars['lilithType']) && $vars['lilithType'] == 'suricata'){
+} elseif (isset($vars['lilithType']) && $vars['lilithType'] == 'suricata') {
     $graphs = [
         'lilith_suricata_total' => ['text'=>'Suricata Total'],
         'lilith_suricata_totals' => ['text'=>'Suricata Totals Per Category']
     ];
-}else{
+} else {
     $graphs = [
         'lilith_total' => ['text'=>'Combined Total'],
         'lilith_totals' => ['text'=>'Combined Totals Per Category']
@@ -176,15 +176,15 @@ foreach ($graphs as $key => $details) {
     $graph_array['id'] = $app['app_id'];
     $graph_array['type'] = 'application_' . $key;
 
-    if(isset($vars['lilithType'])){
+    if (isset($vars['lilithType'])) {
         $graph_array['lilithType']=$vars['lilithType'];
     }
 
-    if(isset($vars['lilithCat'])){
+    if (isset($vars['lilithCat'])) {
         $graph_array['lilithCat']=$vars['lilithCat'];
     }
 
-    if(isset($vars['lilithInstance'])){
+    if (isset($vars['lilithInstance'])) {
         $graph_array['lilithInstance']=$vars['lilithInstance'];
     }
 
