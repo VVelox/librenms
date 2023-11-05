@@ -519,7 +519,8 @@
             "options": {
                 "disabled": "Disabled",
                 "optional": "Optional",
-                "required": "Required"
+                "required": "Required",
+                "required": "LDAPS"
             }
         },
         "auth_ldap_attr.uid": {
@@ -575,7 +576,6 @@
             "order": 23,
             "type": "boolean"
         },
-
         "auth_ldap_emailattr": {
             "default": "mail",
             "group": "auth",
@@ -639,8 +639,22 @@
             "order": 1,
             "type": "integer"
         },
+        "auth_ldaps_port": {
+            "default": 636,
+            "group": "auth",
+            "section": "ldap",
+            "order": 1,
+            "type": "integer"
+        },
         "auth_ldap_prefix": {
             "default": "uid=",
+            "group": "auth",
+            "section": "ldap",
+            "order": 6,
+            "type": "text"
+        },
+        "auth_ldap_user_attr": {
+            "default": "uid",
             "group": "auth",
             "section": "ldap",
             "order": 6,
