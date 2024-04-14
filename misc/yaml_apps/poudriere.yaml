@@ -1,0 +1,254 @@
+%YAML 1.1
+---
+
+pretty_name: Poudriere
+
+extend_name: poudriere
+
+variables:
+  general_base: stats
+  general_stats:
+    BUILT:
+      type: gauge
+    FAIL:
+      type: gauge
+    FETCH:
+      type: gauge
+    IGNORE:
+      type: gauge
+    QUEUE:
+      type: gauge
+    REMAIN:
+      type: gauge
+    SKIP:
+      type: gauge
+    TIME:
+      type: gauge
+    build:
+      type: gauge
+    build-depends:
+      type: gauge
+    check-sanity:
+      type: gauge
+    configure:
+      type: gauge
+    copy-on-write-faults:
+      type: gauge
+      short_descr: COW Faults
+    cpu-time:
+      type: gauge
+      short_descr: CPU Time
+    data-size:
+      type: gauge
+      short_descr: Data Sime
+    elapsed-times:
+      type: gauge
+      short_descr: Elapsed Time
+    extract:
+      type: gauge
+    extract-depends:
+      type: gauge
+      short_descr: Extract Depends
+    fetch-checksum:
+      type: gauge
+      short_descr: Fetch Checksum
+    fetch-depends:
+      type: gauge
+    involuntary-context-switches:
+      type: gauge
+      short_descr: Inv Context Switches
+    job-control-count:
+      type: gauge
+      short_descr: Job Control Count
+    lib-depends:
+      type: gauge
+      short_descr: Lib Depends
+    major-faults:
+      type: gauge
+      short_descr: Major Faults
+    minor-faults:
+      type: gauge
+      short_descr: Minor Faults
+    package:
+      type: gauge
+      short_descr: Package
+    patch:
+      type: gauge
+      short_descr: Patch
+    patch-depends:
+      type: gauge
+      short_descr: Patch Depends
+    percent-cpu:
+      type: gauge
+      short_descr: CPU Percent
+    percent-memory:
+      type: gauge
+      short_descr: Memory Percent
+    pkg-depends:
+      type: gauge
+      short_descr: Pkg Depends
+    read-blocks:
+      type: gauge
+      short_descr: Read Blocks
+    received-messages:
+      type: gauge
+      short_descr: Received Messages
+    rss:
+      type: gauge
+      short_descr: RSS
+    run-depends:
+      type: gauge
+      short_descr: Run Depends
+    sent-messages:
+      type: gauge
+      short_descr: Sent Messsages
+    stack-size:
+      type: gauge
+      short_descr: Stack Size
+    stage:
+      type: gauge
+      short_descr: Stage
+    swaps:
+      type: gauge
+      short_descr: Swaps
+    system-time:
+      type: gauge
+      short_descr: System Time
+    text-size:
+      type: gauge
+      short_descr: Text Size
+    threads:
+      type: gauge
+      short_descr: Threads
+    user-time:
+      type: gauge
+      short_descr: User Time
+    voluntary-context-switches:
+      type: gauge
+      short_descr: Vol Context Switches
+    written-blocks:
+      type: gauge
+      short_descr: Written Blocks
+  pages:
+    jailANDportsANDset:
+      BUILT:
+        type: gauge
+      FAIL:
+        type: gauge
+      FETCH:
+        type: gauge
+      IGNORE:
+        type: gauge
+      QUEUE:
+        type: gauge
+      REMAIN:
+        type: gauge
+      SKIP:
+        type: gauge
+      TIME:
+        type: gauge
+      build:
+        type: gauge
+      build-depends:
+        type: gauge
+      check-sanity:
+        type: gauge
+      configure:
+        type: gauge
+      copy-on-write-faults:
+        type: gauge
+        short_descr: COW Faults
+      cpu-time:
+        type: gauge
+        short_descr: CPU Time
+      data-size:
+        type: gauge
+        short_descr: Data Sime
+      elapsed-times:
+        type: gauge
+        short_descr: Elapsed Time
+      extract:
+        type: gauge
+      extract-depends:
+        type: gauge
+        short_descr: Extract Depends
+      fetch-checksum:
+        type: gauge
+        short_descr: Fetch Checksum
+      fetch-depends:
+        type: gauge
+      involuntary-context-switches:
+        type: gauge
+        short_descr: Inv Context Switches
+      job-control-count:
+        type: gauge
+        short_descr: Job Control Count
+      lib-depends:
+        type: gauge
+        short_descr: Lib Depends
+      major-faults:
+        type: gauge
+        short_descr: Major Faults
+      minor-faults:
+        type: gauge
+        short_descr: Minor Faults
+      package:
+        type: gauge
+        short_descr: Package
+      patch:
+        type: gauge
+        short_descr: Patch
+      patch-depends:
+        type: gauge
+        short_descr: Patch Depends
+      percent-cpu:
+        type: gauge
+        short_descr: CPU Percent
+      percent-memory:
+        type: gauge
+        short_descr: Memory Percent
+      pkg-depends:
+        type: gauge
+        short_descr: Pkg Depends
+      read-blocks:
+        type: gauge
+        short_descr: Read Blocks
+      received-messages:
+        type: gauge
+        short_descr: Received Messages
+      rss:
+        type: gauge
+        short_descr: RSS
+      run-depends:
+        type: gauge
+        short_descr: Run Depends
+      sent-messages:
+        type: gauge
+        short_descr: Sent Messsages
+      stack-size:
+        type: gauge
+        short_descr: Stack Size
+      stage:
+        type: gauge
+        short_descr: Stage
+      swaps:
+        type: gauge
+        short_descr: Swaps
+      system-time:
+        type: gauge
+        short_descr: System Time
+      text-size:
+        type: gauge
+        short_descr: Text Size
+      threads:
+        type: gauge
+        short_descr: Threads
+      user-time:
+        type: gauge
+        short_descr: User Time
+      voluntary-context-switches:
+        type: gauge
+        short_descr: Vol Context Switches
+      written-blocks:
+        type: gauge
+        short_descr: Written Blocks
