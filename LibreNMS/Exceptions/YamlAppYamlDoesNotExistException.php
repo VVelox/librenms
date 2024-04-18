@@ -2,7 +2,7 @@
 /*
  * YamlAppException.php
  *
- * This object has already loaded a yaml. A new object should be created.
+ * The YAML for the specified Yaml App does not exist.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,6 +25,6 @@
 
 namespace LibreNMS\Exceptions;
 
-class YamlAppAlreadyLoadedException extends \YamlAppException
+class YamlAppYamlDoesNotExistException extends \YamlAppException
 {
 }
