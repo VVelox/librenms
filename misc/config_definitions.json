@@ -5546,6 +5546,22 @@
             "default": false,
             "type": "boolean"
         },
+        "ports_hwpredict_alpha": {
+            "default": 0.1,
+            "type": "integer"
+        },
+        "ports_hwpredict_beta": {
+            "default": 0.2,
+            "type": "integer"
+        },
+        "ports_hwpredict_rows": {
+            "default": 1440,
+            "type": "integer"
+        },
+        "ports_hwpredict_seasonal": {
+            "default": 288,
+            "type": "integer"
+        },
         "ports_fdb_purge": {
             "default": 10,
             "units": "days",
