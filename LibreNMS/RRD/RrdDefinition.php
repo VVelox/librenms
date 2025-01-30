@@ -55,9 +55,14 @@ class RrdDefinition
      * @param  int  $heartbeat  Heartbeat for this dataset. Uses the global setting if null.
      * @param  string  $source_ds  Dataset to copy data from an existing rrd file
      * @param  string  $source_file  File to copy data from (may be ommitted copy from the current file)
+     * @param  bool  $hwpredict  If HWPREDICT should be ebabled.
+     * @param  int  $hwpredict_rows  If HWPREDICT, number of rows to use for it.
+     * @param  int  $hwpredict_alpha  If HWPREDICT, alpha value for it.
+     * @param  int  $hwpredict_beta  If HWPREDICT, beta value for it.
+     * @param  int  $hwpredict_seasonal  If HWPREDICT, number of rows for seasonal.
      * @return RrdDefinition
      */
-    public function addDataset($name, $type, $min = null, $max = null, $heartbeat = null, $source_ds = null, $source_file = null)
+    public function addDataset($name, $type, $min = null, $max = null, $heartbeat = null, $source_ds = null, $source_file = null, $hwpredict = false, $hwpredict_rows = 144, $hwpredict_alpha = 0.1, $hwpredict_beta = 0.2, $hwpredict_seasonal = 288)
     {
         if (empty($name)) {
             d_echo('DS must be set to a non-empty string.');
@@ -72,6 +77,11 @@ class RrdDefinition
             'max' => is_null($max) ? 'U' : $max,
             'source_ds' => $source_ds,
             'source_file' => $source_file,
+            'hwpredict' => $hwpredict,
+            'hwpredict_rows' => $hwpredict_rows,
+            'hwpredict_alpha' => $hwpredict_alpha,
+            'hwpredict_beta' => $hwpredict_beta,
+            'hwpredict_seasonal' => $hwpredict_seasonal,
         ];
 
         return $this;
@@ -87,7 +97,12 @@ class RrdDefinition
         $def = array_reduce($this->dataSets, function ($carry, $ds) {
             $name = $ds['name'] . $this->createSource($ds['source_ds'], $ds['source_file']);
 
-            return $carry . "DS:$name:{$ds['type']}:{$ds['hb']}:{$ds['min']}:{$ds['max']} ";
+            $hwpredict = '';
+            if ($ds['hwprredict']) {
+                $hwpredict = 'RRA:HWPREDICT:'.$ds['hwpredict_rows'].':'.$ds['hwpredict_alpha'].':'.$ds['hwpredict_beta'].':'.$ds['hwpredict_seasonal'].' ';
+            }
+
+            return $carry . "DS:$name:{$ds['type']}:{$ds['hb']}:{$ds['min']}:{$ds['max']} ".$hwpredict;
         }, '');
         $sources = implode(' ', array_map(fn ($s) => "--source $s ", $this->sources));
 
