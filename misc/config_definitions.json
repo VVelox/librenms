@@ -5542,6 +5542,10 @@
             "default": "includes/port-descr-parser.inc.php",
             "type": "text"
         },
+        "ports_hwpredict_enable": {
+            "default": false,
+            "type": "boolean"
+        },
         "ports_fdb_purge": {
             "default": 10,
             "units": "days",
