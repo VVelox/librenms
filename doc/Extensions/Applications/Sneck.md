@@ -28,6 +28,22 @@ metrics below are provided.
 | time_to_polling_abs | The absolute value of time_to_polling.                                                                                |
 | check_$CHECK        | Exit status of a specific check `$CHECK` is equal to the name of the check in question. So `foo` gives `check_foo` |
 
+Sneck 1.5.0 and up adds restarts. If present, the metrics below are
+also provided. `$RESTART` is the name of the restart in question.
+
+| Metric                     | Description                                                                 |
+|----------------------------|-----------------------------------------------------------------------------|
+| restarted                  | Total restarts ran                                                          |
+| restarts_failed            | Total restarts that ran and failed                                          |
+| restart_state_error        | 0/1 for if the restart state file could not be read or written             |
+| restart_ran_$RESTART       | 0/1 for if the restart ran                                                  |
+| restart_triggered_$RESTART | 0/1 for if enough of its checks failed to meet its threshold                |
+| restart_failed_$RESTART    | 0/1 for if it ran and exited non-zero, timed out, or its checks still failed |
+
+A restart counts as failed if it exited non-zero or has a error, which
+includes timing out or its checks still failing when `check_restart`
+is set.
+
 The standard Nagios/Icinga style exit codes are used and those are as
 below.
 
@@ -93,6 +109,9 @@ at [MetaCPAN](https://metacpan.org/dist/Monitoring-Sneck-Boop_Snoot) and
     ```bash
     */5 * * * * /usr/bin/env PATH=/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin /usr/local/bin/sneck -u 2> /dev/null > /dev/null
     ```
+
+    Restarts only run when `-r` is passed, so for those use `sneck -u -r` instead.
+    Never pass `-r` when calling it via snmpd.
 
 4. Set it up in the snmpd config and restart snmpd. If calling `sneck -c` instead or catting the non-snmp cache file, there is the possibility
    of snmpd mangling the return. To avoid this cat the snmp cache file as below or call `sneck -c -b`.

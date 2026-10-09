@@ -21,6 +21,15 @@ if (isset($app->data['debugs'])) {
     $old_debugs = array_keys($app->data['debugs']);
 }
 
+$old_restarts = [];
+if (isset($app->data['restarts'])) {
+    $old_restarts = array_keys($app->data['restarts']);
+}
+$old_restart_state_error = $app->data['restart_state_error'] ?? null;
+
+// used to avoid logging the same restarts twice if the cache was not updated between polls
+$old_time = $app->data['time'] ?? null;
+
 if (LibrenmsConfig::has('apps.sneck.polling_time_diff')) {
     $compute_time_diff = LibrenmsConfig::get('apps.sneck.polling_time_diff');
 } else {
@@ -45,6 +54,12 @@ if (isset($json_return['data']) and isset($json_return['data']['checks'])) {
 $new_debugs = [];
 if (isset($json_return['data']) and isset($json_return['data']['debugs'])) {
     $new_debugs = array_keys($json_return['data']['debugs']);
+}
+
+// restarts are only present in version 1.5.0 and up
+$new_restarts = [];
+if (isset($json_return['data']['restarts']) && is_array($json_return['data']['restarts'])) {
+    $new_restarts = array_keys($json_return['data']['restarts']);
 }
 
 $rrd_name = ['app', $name, $app->app_id];
@@ -106,6 +121,60 @@ foreach ($json_return['data']['checks'] as $key => $value) {
     $fields['check_' . $key] = $value['exit'];
 }
 
+// restarts are only present in version 1.5.0 and up
+$restarts_ran = [];
+$restarts_failed = [];
+if (isset($json_return['data']['restarted'])) {
+    $restarts_triggered_count = 0;
+    foreach ($new_restarts as $restart) {
+        $restart_data = $json_return['data']['restarts'][$restart];
+        $restart_ran = ! empty($restart_data['ran']) ? 1 : 0;
+        $restart_triggered = ! empty($restart_data['triggered']) ? 1 : 0;
+        // ran and either did not exit 0 or had a error, such as check_restart finding its checks still failing
+        $restart_failed = $restart_ran && ((isset($restart_data['exit']) && $restart_data['exit'] != 0) || isset($restart_data['error'])) ? 1 : 0;
+
+        $fields['restart_ran_' . $restart] = $restart_ran;
+        $fields['restart_triggered_' . $restart] = $restart_triggered;
+        $fields['restart_failed_' . $restart] = $restart_failed;
+
+        $restarts_triggered_count += $restart_triggered;
+        if ($restart_ran) {
+            $restarts_ran[$restart] = [
+                'reason' => $restart_data['reason'] ?? null,
+                'exit' => $restart_data['exit'] ?? null,
+            ];
+        }
+        if ($restart_failed) {
+            $restarts_failed[$restart] = [
+                'exit' => $restart_data['exit'] ?? null,
+                'error' => $restart_data['error'] ?? null,
+                'output' => $restart_data['output'] ?? null,
+            ];
+        }
+    }
+
+    $fields['restarted'] = $json_return['data']['restarted'];
+    $fields['restarts_failed'] = count($restarts_failed);
+    $fields['restart_state_error'] = isset($json_return['data']['restart_state_error']) ? 1 : 0;
+
+    $rrd_def = RrdDefinition::make()
+        ->addDataset('restarted', 'GAUGE', 0)
+        ->addDataset('triggered', 'GAUGE', 0)
+        ->addDataset('failed', 'GAUGE', 0);
+
+    $rrd_name = ['app', $name, $app->app_id, 'restarts'];
+
+    // $fields is also used for storing metrics, so don't stomp it
+    $restarts_fields = [
+        'restarted' => $json_return['data']['restarted'],
+        'triggered' => $restarts_triggered_count,
+        'failed' => count($restarts_failed),
+    ];
+
+    $tags = ['name' => $name, 'app_id' => $app->app_id, 'rrd_def' => $rrd_def, 'rrd_name' => $rrd_name];
+    app('Datastore')->put($device, 'app', $tags, $restarts_fields);
+}
+
 $fields['time_to_polling_abs'] = abs($time_to_polling);
 
 if (abs($time_to_polling) > 540) {
@@ -138,6 +207,39 @@ if (count($added_debugs) > 0 || count($removed_debugs) > 0) {
     $log_message .= count($added_debugs) > 0 ? ' Added ' . json_encode($added_debugs) : '';
     $log_message .= count($removed_debugs) > 0 ? ' Removed ' . json_encode($removed_debugs) : '';
     Eventlog::log($log_message, $device['device_id'], 'application');
+}
+
+//check for added/removed restarts
+$added_restarts = array_values(array_diff($new_restarts, $old_restarts));
+$removed_restarts = array_values(array_diff($old_restarts, $new_restarts));
+
+// if we have any restart changes, log it
+if (count($added_restarts) > 0 || count($removed_restarts) > 0) {
+    $log_message = 'Sneck Restarts Change:';
+    $log_message .= count($added_restarts) > 0 ? ' Added ' . json_encode($added_restarts) : '';
+    $log_message .= count($removed_restarts) > 0 ? ' Removed ' . json_encode($removed_restarts) : '';
+    Eventlog::log($log_message, $device['device_id'], 'application');
+}
+
+// only log restarts that ran if this is a new sneck run, not the same cache polled again
+if ($old_time != $json_return['data']['time']) {
+    // failed ones are logged separately below
+    $restarts_ran_okay = array_diff_key($restarts_ran, $restarts_failed);
+    if (count($restarts_ran_okay) > 0) {
+        $log_message = 'Sneck Restarts Ran: ' . json_encode($restarts_ran_okay);
+        Eventlog::log($log_message, $device['device_id'], 'application', Severity::Warning);
+    }
+
+    if (count($restarts_failed) > 0) {
+        $log_message = 'Sneck Restarts Failed: ' . json_encode($restarts_failed);
+        Eventlog::log($log_message, $device['device_id'], 'application', Severity::Error);
+    }
+}
+
+// log restart state file errors when they appear or change
+if (isset($json_return['data']['restart_state_error']) && $json_return['data']['restart_state_error'] != $old_restart_state_error) {
+    $log_message = 'Sneck Restart State Error: ' . $json_return['data']['restart_state_error'];
+    Eventlog::log($log_message, $device['device_id'], 'application', Severity::Error);
 }
 
 // go through and looking for status changes

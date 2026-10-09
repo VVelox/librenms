@@ -614,6 +614,16 @@
     "builder": {"condition":"AND","rules":[{"id":"applications.app_type","field":"applications.app_type","type":"string","input":"text","operator":"equal","value":"sneck"},{"id":"application_metrics.metric","field":"application_metrics.metric","type":"string","input":"text","operator":"equal","value":"time_to_polling_abs"},{"id":"application_metrics.value","field":"application_metrics.value","type":"string","input":"text","operator":"greater_or_equal","value":"540"}],"valid":true}
   },
   {
+    "name": "Sneck Restart Ran >= 1",
+    "severity": "warning",
+    "builder": {"condition":"AND","rules":[{"id":"applications.app_type","field":"applications.app_type","type":"string","input":"text","operator":"equal","value":"sneck"},{"id":"application_metrics.metric","field":"application_metrics.metric","type":"string","input":"text","operator":"equal","value":"restarted"},{"id":"application_metrics.value","field":"application_metrics.value","type":"string","input":"text","operator":"greater_or_equal","value":"1"}],"valid":true}
+  },
+  {
+    "name": "Sneck Restart Failed >= 1",
+    "severity": "critical",
+    "builder": {"condition":"AND","rules":[{"id":"applications.app_type","field":"applications.app_type","type":"string","input":"text","operator":"equal","value":"sneck"},{"id":"application_metrics.metric","field":"application_metrics.metric","type":"string","input":"text","operator":"equal","value":"restarts_failed"},{"id":"application_metrics.value","field":"application_metrics.value","type":"string","input":"text","operator":"greater_or_equal","value":"1"}],"valid":true}
+  },
+  {
     "name": "Suricata has a WARNING alert",
     "severity": "warning",
     "builder": {"condition":"AND","rules":[{"id":"applications.app_type","field":"applications.app_type","type":"string","input":"text","operator":"equal","value":"suricata"},{"id":"application_metrics.metric","field":"application_metrics.metric","type":"string","input":"text","operator":"equal","value":"alert"},{"id":"application_metrics.value","field":"application_metrics.value","type":"string","input":"text","operator":"equal","value":"1"}],"valid":true}

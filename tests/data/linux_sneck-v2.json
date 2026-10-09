@@ -1,0 +1,160 @@
+{
+    "applications": {
+        "discovery": {
+            "applications": [
+                {
+                    "app_type": "sneck",
+                    "app_state": "UNKNOWN",
+                    "discovered": 1,
+                    "app_state_prev": null,
+                    "app_status": "",
+                    "app_instance": "",
+                    "data": null,
+                    "deleted_at": null
+                }
+            ]
+        },
+        "poller": {
+            "applications": [
+                {
+                    "app_type": "sneck",
+                    "app_state": "OK",
+                    "discovered": 1,
+                    "app_state_prev": "UNKNOWN",
+                    "app_status": "",
+                    "app_instance": "",
+                    "data": "{\"alert\":1,\"alertString\":\"restart nginx exited 1\",\"checks\":{\"http\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_http -H 127.0.0.1\",\"exit\":2,\"output\":\"HTTP CRITICAL - Unable to open TCP socket\",\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_http -H 127.0.0.1\",\"rechecked_by\":\"nginx\",\"run_time\":\"0.012345678\"},\"nginx_procs\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_procs -C nginx 1:\",\"exit\":2,\"output\":\"PROCS CRITICAL: 0 processes with command name nginx | procs=0;;1:;0;\",\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_procs -C nginx 1:\",\"rechecked_by\":\"nginx\",\"run_time\":\"0.023456789\"},\"raid\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_raid\",\"exit\":0,\"output\":\"OK: mdstat:[md0(2.73 TiB raid1):UU]\",\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_raid\",\"run_time\":\"0.034567891\"}},\"critical\":2,\"debugs\":{\"nginx_test\":{\"check\":\"\\/usr\\/sbin\\/nginx -t\",\"exit\":1,\"output\":\"nginx: configuration file \\/etc\\/nginx\\/nginx.conf test failed\",\"ran\":\"\\/usr\\/sbin\\/nginx -t\",\"run_time\":\"0.045678912\"}},\"errored\":0,\"hostname\":\"webhost\",\"ok\":1,\"restarted\":1,\"restarts\":{\"nginx\":{\"attempts\":1,\"command\":\"\\/usr\\/sbin\\/service nginx restart\",\"exit\":1,\"failed_checks\":[\"http\",\"nginx_procs\"],\"output\":\"Job for nginx.service failed because the control process exited with error code.\",\"ran\":1,\"ran_command\":\"\\/usr\\/sbin\\/service nginx restart\",\"reason\":\"threshold\",\"recheck_failed_checks\":[\"http\",\"nginx_procs\"],\"run_time\":\"1.234567891\",\"threshold\":1,\"triggered\":1},\"php_fpm\":{\"attempts\":0,\"command\":\"\\/usr\\/sbin\\/service php-fpm restart\",\"failed_checks\":[],\"ran\":0,\"reason\":\"not triggered\",\"threshold\":1,\"triggered\":0}},\"run_time\":\"1.500000000\",\"time\":1791590400,\"unknown\":0,\"vars\":[],\"warning\":0}",
+                    "deleted_at": null
+                }
+            ],
+            "application_metrics": [
+                {
+                    "metric": "check_http",
+                    "value": 2,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "check_nginx_procs",
+                    "value": 2,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "check_raid",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "critical",
+                    "value": 2,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "errored",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "ok",
+                    "value": 1,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restart_failed_nginx",
+                    "value": 1,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restart_failed_php_fpm",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restart_ran_nginx",
+                    "value": 1,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restart_ran_php_fpm",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restart_state_error",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restart_triggered_nginx",
+                    "value": 1,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restart_triggered_php_fpm",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restarted",
+                    "value": 1,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "restarts_failed",
+                    "value": 1,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "run_time",
+                    "value": 1.5,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "time",
+                    "value": 1791590400,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "time_to_polling",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "time_to_polling_abs",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "unknown",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                },
+                {
+                    "metric": "warning",
+                    "value": 0,
+                    "value_prev": null,
+                    "app_type": "sneck"
+                }
+            ]
+        }
+    }
+}

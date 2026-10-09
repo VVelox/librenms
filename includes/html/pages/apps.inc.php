@@ -103,6 +103,7 @@ $graphs['sneck'] = [
     'results',
     'time',
     'runtime',
+    'restarts',
 ];
 $graphs['ntp-client'] = [
     'stats',
