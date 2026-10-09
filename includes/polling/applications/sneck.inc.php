@@ -37,8 +37,6 @@ try {
     return;
 }
 
-$app->data = $json_return['data'];
-
 $new_checks = [];
 if (isset($json_return['data']) and isset($json_return['data']['checks'])) {
     $new_checks = array_keys($json_return['data']['checks']);
@@ -115,6 +113,9 @@ if (abs($time_to_polling) > 540) {
     $json_return['data']['alert'] = 1;
 }
 
+// set after the alert check above so it includes any time_to_polling alert
+$app->data = $json_return['data'];
+
 //check for added checks/debugs
 $added_checks = array_values(array_diff($new_checks, $old_checks));
 $added_debugs = array_values(array_diff($new_debugs, $old_debugs));
@@ -127,7 +128,7 @@ $removed_debugs = array_values(array_diff($old_debugs, $new_debugs));
 if (count($added_checks) > 0 || count($removed_checks) > 0) {
     $log_message = 'Sneck Check Change:';
     $log_message .= count($added_checks) > 0 ? ' Added ' . json_encode($added_checks) : '';
-    $log_message .= count($removed_checks) > 0 ? ' Removed ' . json_encode($added_checks) : '';
+    $log_message .= count($removed_checks) > 0 ? ' Removed ' . json_encode($removed_checks) : '';
     Eventlog::log($log_message, $device['device_id'], 'application');
 }
 
@@ -135,7 +136,7 @@ if (count($added_checks) > 0 || count($removed_checks) > 0) {
 if (count($added_debugs) > 0 || count($removed_debugs) > 0) {
     $log_message = 'Sneck Debugs Change:';
     $log_message .= count($added_debugs) > 0 ? ' Added ' . json_encode($added_debugs) : '';
-    $log_message .= count($removed_debugs) > 0 ? ' Removed ' . json_encode($added_debugs) : '';
+    $log_message .= count($removed_debugs) > 0 ? ' Removed ' . json_encode($removed_debugs) : '';
     Eventlog::log($log_message, $device['device_id'], 'application');
 }
 
@@ -146,7 +147,7 @@ $alerted = [];
 $unknowned = [];
 foreach ($new_checks as $check) {
     if (isset($old_checks_data[$check]) && isset($old_checks_data[$check]['exit']) && isset($old_checks_data[$check]['output'])) {
-        if ($json_return['data']['checks'][$check]['exit'] != $app->data['data']['checks'][$check]['exit']) {
+        if ($json_return['data']['checks'][$check]['exit'] != $old_checks_data[$check]['exit']) {
             $check_output = $json_return['data']['checks'][$check]['output'];
             $exit_code = $json_return['data']['checks'][$check]['exit'];
 
@@ -196,7 +197,7 @@ if (count($alerted) > 0) {
 
 // log any unknowns
 if (count($unknowned) > 0) {
-    $log_message = 'Sneck Check Unknowns: ' . json_encode($unknownwed);
+    $log_message = 'Sneck Check Unknowns: ' . json_encode($unknowned);
     Eventlog::log($log_message, $device['device_id'], 'application', Severity::Unknown);
 }
 

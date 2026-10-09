@@ -106,7 +106,7 @@ if ((isset($vars['sneck_check']) && isset($app->data['checks'][$vars['sneck_chec
         'sneck_time' => 'Time Difference',
     ];
 
-    if (isset($app->data['runtime'])) {
+    if (isset($app->data['run_time'])) {
         $graphs['sneck_runtime'] = 'Runtime';
     }
 
