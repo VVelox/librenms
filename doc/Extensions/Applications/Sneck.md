@@ -31,13 +31,13 @@ metrics below are provided.
 Sneck 1.5.0 and up adds restarts. If present, the metrics below are
 also provided. `$RESTART` is the name of the restart in question.
 
-| Metric                     | Description                                                                 |
-|----------------------------|-----------------------------------------------------------------------------|
-| restarted                  | Total restarts ran                                                          |
-| restarts_failed            | Total restarts that ran and failed                                          |
-| restart_state_error        | 0/1 for if the restart state file could not be read or written             |
-| restart_ran_$RESTART       | 0/1 for if the restart ran                                                  |
-| restart_triggered_$RESTART | 0/1 for if enough of its checks failed to meet its threshold                |
+| Metric                     | Description                                                                  |
+|----------------------------|------------------------------------------------------------------------------|
+| restarted                  | Total restarts ran                                                           |
+| restarts_failed            | Total restarts that ran and failed                                           |
+| restart_state_error        | 0/1 for if the restart state file could not be read or written               |
+| restart_ran_$RESTART       | 0/1 for if the restart ran                                                   |
+| restart_triggered_$RESTART | 0/1 for if enough of its checks failed to meet its threshold                 |
 | restart_failed_$RESTART    | 0/1 for if it ran and exited non-zero, timed out, or its checks still failed |
 
 A restart counts as failed if it exited non-zero or has a error, which
