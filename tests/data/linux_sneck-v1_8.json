@@ -1,0 +1,124 @@
+{
+    "applications": {
+        "discovery": {
+            "applications": [
+                {
+                    "app_type": "sneck",
+                    "app_state": "UNKNOWN",
+                    "discovered": 1,
+                    "app_state_prev": null,
+                    "app_status": "",
+                    "app_instance": "",
+                    "data": null,
+                    "deleted_at": null
+                }
+            ]
+        },
+        "poller": {
+            "applications": [
+                {
+                    "app_type": "sneck",
+                    "app_state": "OK",
+                    "discovered": 1,
+                    "app_state_prev": "UNKNOWN",
+                    "app_status": "",
+                    "app_instance": "",
+                    "data": "{\"alert\":1,\"alertString\":\"DISK WARNING - free space: \\/ 4012 MiB (18% inode=91%); | \\/=17860MiB;17408;19584;0;21760\\nPROCS CRITICAL: 0 processes with command name 'php-fpm' | procs=0;;1:;0;\\n\",\"checks\":{\"disk_root\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_disk -w 20% -c 10% -p \\/\",\"exit\":1,\"output\":\"DISK WARNING - free space: \\/ 4012 MiB (18% inode=91%); | \\/=17860MiB;17408;19584;0;21760\",\"perfdata\":{\"\\/\":{\"critical\":\"19584\",\"max\":21760,\"min\":0,\"unit\":\"MiB\",\"value\":17860,\"warning\":\"17408\"}},\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_disk -w 20% -c 10% -p \\/\",\"run_time\":\"0.583333333\"},\"http\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_http -H 127.0.0.1:8000\",\"exit\":0,\"output\":\"HTTP OK: HTTP\\/1.1 200 OK - 6249 bytes in 0.057 second response time |time=0.057237s;;;0.000000;10.000000 size=6249B;;;0\",\"perfdata\":{\"size\":{\"critical\":null,\"max\":null,\"min\":0,\"unit\":\"B\",\"value\":6249,\"warning\":null},\"time\":{\"critical\":null,\"max\":10,\"min\":0,\"unit\":\"s\",\"value\":0.057237,\"warning\":null}},\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_http -H 127.0.0.1:8000\",\"run_time\":\"0.472222222\"},\"if_em0\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_ifstatus -i em0\",\"exit\":0,\"output\":\"OK - em0 up | in=8834566c out=U\",\"perfdata\":{\"in\":{\"critical\":null,\"max\":null,\"min\":null,\"unit\":\"c\",\"value\":8834566,\"warning\":null},\"out\":{\"critical\":null,\"max\":null,\"min\":null,\"unit\":\"\",\"value\":null,\"warning\":null}},\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_ifstatus -i em0\",\"run_time\":\"0.694444444\"},\"mongodb\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_mongodb.py\",\"exit\":0,\"output\":\"OK - Connection took 0.011 seconds\",\"perfdata\":[],\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_mongodb.py\",\"run_time\":\"0.361111111\"},\"php_procs\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_procs -C php-fpm -c 1:\",\"exit\":2,\"output\":\"PROCS CRITICAL: 0 processes with command name 'php-fpm' | procs=0;;1:;0;\",\"perfdata\":{\"procs\":{\"critical\":\"1:\",\"max\":null,\"min\":0,\"unit\":\"\",\"value\":0,\"warning\":null}},\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_procs -C php-fpm -c 1:\",\"run_time\":\"0.805555555\"}},\"compliance\":[],\"compliance_alert\":0,\"compliance_alertString\":\"\",\"compliance_critical\":0,\"compliance_errored\":0,\"compliance_frameworks\":[],\"compliance_ok\":0,\"compliance_score\":null,\"compliance_unknown\":0,\"compliance_waived\":0,\"compliance_warning\":0,\"critical\":1,\"debugs\":{\"load\":{\"check\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_load -w 4,3,2 -c 8,6,4\",\"exit\":0,\"output\":\"OK - load average: 0.52, 0.48, 0.40|load1=0.520;4.000;8.000;0; load5=0.480;3.000;6.000;0; load15=0.400;2.000;4.000;0;\",\"perfdata\":{\"load1\":{\"critical\":\"8.000\",\"max\":null,\"min\":0,\"unit\":\"\",\"value\":0.52,\"warning\":\"4.000\"},\"load15\":{\"critical\":\"4.000\",\"max\":null,\"min\":0,\"unit\":\"\",\"value\":0.4,\"warning\":\"2.000\"},\"load5\":{\"critical\":\"6.000\",\"max\":null,\"min\":0,\"unit\":\"\",\"value\":0.48,\"warning\":\"3.000\"}},\"ran\":\"\\/usr\\/lib\\/nagios\\/plugins\\/check_load -w 4,3,2 -c 8,6,4\",\"run_time\":\"0.012345678\"}},\"errored\":0,\"hostname\":\"nagi\",\"ok\":3,\"restarted\":1,\"restarts\":{\"httpd\":{\"attempts\":0,\"command\":\"\\/usr\\/sbin\\/service apache2 restart\",\"failed_checks\":[],\"ran\":0,\"reason\":\"not triggered\",\"threshold\":1,\"triggered\":0},\"php_fpm\":{\"attempts\":1,\"command\":\"\\/usr\\/sbin\\/service php-fpm restart\",\"exit\":0,\"failed_checks\":[\"php_procs\"],\"output\":\"\",\"ran\":1,\"ran_command\":\"\\/usr\\/sbin\\/service php-fpm restart\",\"reason\":\"threshold\",\"run_time\":\"1.234567890\",\"threshold\":1,\"triggered\":1}},\"run_time\":\"2.345678901\",\"time\":1795036528,\"unknown\":0,\"vars\":[],\"warning\":1}",
+                    "deleted_at": null
+                }
+            ],
+            "application_metrics": [
+                {
+                    "app_type": "sneck",
+                    "metric": "check_disk_root",
+                    "value": 1,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "check_http",
+                    "value": 0,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "check_if_em0",
+                    "value": 0,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "check_mongodb",
+                    "value": 0,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "check_php_procs",
+                    "value": 2,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "critical",
+                    "value": 1,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "errored",
+                    "value": 0,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "ok",
+                    "value": 3,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "restarted",
+                    "value": 1,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "run_time",
+                    "value": 2.345678901,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "time",
+                    "value": 1795036528,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "time_to_polling",
+                    "value": 0,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "time_to_polling_abs",
+                    "value": 0,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "unknown",
+                    "value": 0,
+                    "value_prev": null
+                },
+                {
+                    "app_type": "sneck",
+                    "metric": "warning",
+                    "value": 1,
+                    "value_prev": null
+                }
+            ]
+        }
+    }
+}

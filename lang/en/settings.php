@@ -349,6 +349,10 @@ return [
                     'description' => 'Polling time difference',
                     'help' => 'Enable polling time difference tracking for Sneck',
                 ],
+                'perfdata_save' => [
+                    'description' => 'Save perfdata for checks',
+                    'help' => 'Checks whose name matches one of these regular expressions have their perfdata saved',
+                ],
             ],
         ],
         'astext' => [

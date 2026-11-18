@@ -642,6 +642,13 @@
             "section": "oslv_monitor",
             "order": 6
         },
+        "apps.sneck.perfdata_save": {
+            "default": [],
+            "type": "array",
+            "group": "apps",
+            "section": "sneck",
+            "order": 1
+        },
         "apps.sneck.polling_time_diff": {
             "default": false,
             "type": "boolean",

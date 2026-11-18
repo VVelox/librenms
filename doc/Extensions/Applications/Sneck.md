@@ -27,6 +27,8 @@ metrics below are provided.
 | time_to_polling     | Difference in seconds between when polling data was generated and when polled                                         |
 | time_to_polling_abs | The absolute value of time_to_polling.                                                                                |
 | check_$CHECK        | Exit status of a specific check `$CHECK` is equal to the name of the check in question. So `foo` gives `check_foo` |
+| perf_$CHECK_$LABEL  | Perfdata value for label `$LABEL` of check `$CHECK`. Only present if saved via `apps.sneck.perfdata_save` and not U.  |
+| restarted           | Number of restarts ran. Only present with Sneck 1.5.0 and up.                                                         |
 
 The standard Nagios/Icinga style exit codes are used and those are as
 below.
@@ -45,7 +47,18 @@ Without NTP, the check alerts above a
 difference of 540s.
 
 ```
-lnms config:set app.sneck.polling_time_diff true
+lnms config:set apps.sneck.polling_time_diff true
+```
+
+With Sneck 1.8.0 and up, perfdata from check output is shown when
+viewing a check, debug, or compliance check. Perfdata is only saved and
+graphed for checks whose name matches one of the regular expressions
+in `apps.sneck.perfdata_save`. It defaults to empty, so nothing is
+saved. Each label of each matching check gets its own RRD.
+
+```
+lnms config:set apps.sneck.perfdata_save.+ '/^check_http$/'
+lnms config:set apps.sneck.perfdata_save.+ '/^disk_/'
 ```
 
 For more information on Sneck, check it out at
@@ -62,16 +75,20 @@ at [MetaCPAN](https://metacpan.org/dist/Monitoring-Sneck-Boop_Snoot) and
 === "Debian/Ubuntu"
 
     ```bash
-    apt-get install cpanminus libjson-perl libfile-slurp-perl libmime-base64-perl
+    apt-get install cpanminus libjson-perl libfile-slurp-perl libproc-pid-file-perl libdatetime-perl libdatetime-event-cron-perl
     cpanm Monitoring::Sneck
     ```
+
+    For YAML configs, also install `libyaml-libyaml-perl`.
 
 === "FreeBSD"
 
     ```bash
-    pkg install p5-JSON p5-File-Slurp p5-MIME-Base64 p5-App-cpanminus
+    pkg install p5-JSON p5-File-Slurp p5-Proc-PID-File p5-DateTime p5-DateTime-Event-Cron p5-App-cpanminus
     cpanm Monitoring::Sneck
     ```
+
+    For YAML configs, also install `p5-YAML-LibYAML`.
 
 === "Generic"
 
