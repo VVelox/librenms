@@ -20,9 +20,9 @@ class RrdStatsDefinition
 
     /** @var array<string, array{label: string, step: int, minRange: int}> label is a translation key, shown when the graph covers at least minRange seconds, a shorter range only shows NaN */
     private const array PERIODS = [
-        'hourly' => ['label' => 'graphs.stats.hour', 'step' => 3600, 'minRange' => 0],
-        'daily' => ['label' => 'graphs.stats.day', 'step' => 86400, 'minRange' => 129600],
-        'weekly' => ['label' => 'graphs.stats.week', 'step' => 604800, 'minRange' => 691200],
+        'hourly' => ['label' => 'graph.stats.hour', 'step' => 3600, 'minRange' => 0],
+        'daily' => ['label' => 'graph.stats.day', 'step' => 86400, 'minRange' => 129600],
+        'weekly' => ['label' => 'graph.stats.week', 'step' => 604800, 'minRange' => 691200],
     ];
 
     /** @var list<string> */
@@ -83,11 +83,11 @@ class RrdStatsDefinition
 
             // only the average is drawn, min and max are legend rows
             $periodLabel = __($labelKey);
-            $this->drawing[] = "LINE1.25:$drawnId#$color:" . Rrd::fixedSafeDescr($prefix . __('graphs.stats.avg', ['period' => $periodLabel]), RrdSeriesDefinition::LABEL_WIDTH);
+            $this->drawing[] = "LINE1.25:$drawnId#$color:" . Rrd::fixedSafeDescr($prefix . __('graph.stats.avg', ['period' => $periodLabel]), RrdSeriesDefinition::LABEL_WIDTH);
             array_push($this->drawing, ...$this->legendRow($periodId, $unit));
             foreach (['min', 'max'] as $suffix) {
                 // two spaces take the place of the color box, aligning the label with the others
-                $this->drawing[] = 'COMMENT:  ' . Rrd::fixedSafeDescr($prefix . __("graphs.stats.$suffix", ['period' => $periodLabel]), RrdSeriesDefinition::LABEL_WIDTH);
+                $this->drawing[] = 'COMMENT:  ' . Rrd::fixedSafeDescr($prefix . __("graph.stats.$suffix", ['period' => $periodLabel]), RrdSeriesDefinition::LABEL_WIDTH);
                 array_push($this->drawing, ...$this->legendRow($periodId . $suffix, $unit));
             }
         }
@@ -108,7 +108,7 @@ class RrdStatsDefinition
                 array_push($this->definitions, "CDEF:{$lineId}line=$id,POP,$percentileId,$factorRpn,*", "VDEF:$lineId={$lineId}line,FIRST");
             }
 
-            $this->drawing[] = "HRULE:$lineId#$percentileColors[$index]:" . Rrd::fixedSafeDescr($prefix . __('graphs.stats.percentile', ['percentile' => $percentile]), RrdSeriesDefinition::LABEL_WIDTH);
+            $this->drawing[] = "HRULE:$lineId#$percentileColors[$index]:" . Rrd::fixedSafeDescr($prefix . __('graph.stats.percentile', ['percentile' => $percentile]), RrdSeriesDefinition::LABEL_WIDTH);
             $this->drawing[] = "GPRINT:$percentileId:%5." . RrdSeriesDefinition::PRECISION . "lf%s$unit\\n";
         }
     }
