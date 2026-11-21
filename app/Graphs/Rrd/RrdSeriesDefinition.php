@@ -18,7 +18,7 @@ use LibreNMS\Exceptions\NoGraphData;
 class RrdSeriesDefinition
 {
     public const int LABEL_WIDTH = 20;
-    private const int PRECISION = 2;
+    public const int PRECISION = 2;
 
     /** @var array<string, array{suffix: string, cf: string}> legend columns and the value each one shows */
     private const array LEGEND_COLUMNS = [
