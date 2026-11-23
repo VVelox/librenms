@@ -275,6 +275,7 @@ Common named arguments on `GraphOptions` are:
 | `scaleMargin` | Widens an autoscaled axis by this fraction of the values, so values that barely change still get axis labels. |
 | `axisUnit` | Shows a unit after the axis values, which are then shown without SI prefixes. |
 | `rightAxisLabel` | Adds a right axis with the same scale as the left one. |
+| `precision` | Decimal places of the legend values, 2 by default. Use 0 for counts. |
 
 Describe what the graph should show rather than how rrdtool draws it.
 `leftAxisFormat` and `rightAxis` take rrdtool syntax and only exist for the
@@ -374,12 +375,28 @@ percentile. `TrafficOptions::series` limits the traffic summaries to some of
 the series: `app/Graphs/Device/BitsGraph.php` stacks the traffic of each port
 and only summarizes, and draws the percentiles of, the device totals.
 
+<<<<<<< HEAD
 For application graphs, extend `App\Graphs\Application\ApplicationGraph`;
 `$this->metric()` reads the `app-<app_type>-<app_id>.rrd` file the application
 poller writes. Graph class names can not contain hyphens, so an app such as
 `ntp-client` sets `GRAPH_PREFIX` in its `ApplicationDefinition` to name its
 graphs `application_ntp_client_*`. See
 `app/Graphs/Application/NtpClientOffsetGraph.php`.
+=======
+For application graphs, extend `App\Graphs\Application\ApplicationGraph`.
+`$this->metric()` reads the `app-<app_type>-<app_id>.rrd` file the
+application poller writes. For an app with more files, pass the parts that
+follow the app id as tags, in order:
+`$this->metric(['category' => 'overview'])` reads
+`app-backupninja-<app_id>-overview.rrd`.
+A file with a part before the app id, such as `app-asterisk-stats-<app_id>.rrd`,
+needs its own `MetricIdentity` with the tags in that order.
+Graph names can not contain hyphens, so the graphs of an app such as
+`ntp-client` need to be named like `application_ntp_client_*`.
+`app/Graphs/Application/SneckResultsGraph.php` and
+`app/Graphs/Application/SneckRunTimeGraph.php` are examples, the latter
+reading `app-sneck-<app_id>-run_time.rrd`.
+>>>>>>> e2be8260a7 (migrate sneck)
 
 For graph types outside device graphs, extend `AbstractSeriesGraph` and
 implement `isAuthorized()` for the entities being displayed, using `canView()`

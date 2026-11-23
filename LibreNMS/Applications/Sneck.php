@@ -11,7 +11,7 @@ class Sneck extends ApplicationDefinition
     protected const ?array OVERVIEW = [
         'results',
         'time',
-        'runtime',
+        'run_time',
     ];
 
     protected const array GRAPHS = [
@@ -46,8 +46,8 @@ class Sneck extends ApplicationDefinition
             }
         } else {
             parent::buildDevicePage($page, $application);
-            if (isset($data['runtime'])) {
-                $page->addGraphs(['runtime' => 'Runtime']);
+            if (isset($data['run_time'])) {
+                $page->addGraphs(['run_time' => 'Runtime']);
             }
             if ($data) {
                 $page->details['Alerts'] = (string) ($data['alertString'] ?? '');

@@ -129,6 +129,7 @@ class RrdGraphRenderingTest extends TestCase
         $this->assertStringStartsWith(self::PNG_HEADER, $graph->render()->data);
     }
 
+<<<<<<< HEAD
     #[TestWith(['application_ntp_client_stats'])]
     #[TestWith(['application_ntp_client_offset'])]
     #[TestWith(['application_ntp_client_freq'])]
@@ -140,6 +141,19 @@ class RrdGraphRenderingTest extends TestCase
         $this->createRrd($device, "app-ntp-client-$app->app_id.rrd", ['offset', 'frequency', 'jitter', 'noise', 'stability']);
 
         $graph = (new GraphFactory)->graphFor(new GraphParameters(['type' => $type, 'id' => $app->app_id, 'graph_type' => 'png', 'from' => time() - 800000]));
+=======
+    #[TestWith(['application_sneck_results'])]
+    #[TestWith(['application_sneck_time'])]
+    #[TestWith(['application_sneck_run_time'])]
+    public function test_it_draws_sneck_graphs(string $type): void
+    {
+        $device = Device::factory()->create();
+        $app = Application::factory()->for($device)->create(['app_type' => 'sneck']);
+        $this->createRrd($device, "app-sneck-$app->app_id.rrd", ['time', 'time_to_polling', 'ok', 'warning', 'critical', 'unknown', 'errored']);
+        $this->createRrd($device, "app-sneck-$app->app_id-run_time.rrd", ['data']);
+
+        $graph = (new GraphFactory)->graphFor(new GraphParameters(['type' => $type, 'id' => $app->app_id, 'graph_type' => 'png']));
+>>>>>>> e2be8260a7 (migrate sneck)
 
         $this->assertStringStartsWith(self::PNG_HEADER, $graph->render()->data);
     }

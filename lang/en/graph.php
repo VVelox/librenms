@@ -171,6 +171,7 @@ return [
         ],
     ],
     'application' => [
+<<<<<<< HEAD
         'subtitle' => ' :: App :: :name',
         'ntp_client' => [
             'frequency' => 'Frequency',
@@ -178,6 +179,20 @@ return [
             'stability' => 'Stability',
             'jitter' => 'Jitter',
             'noise' => 'Noise',
+=======
+        'sneck' => [
+            'results' => 'Results',
+            'ok' => 'OK',
+            'warning' => 'Warning',
+            'critical' => 'Critical',
+            'unknown' => 'Unknown',
+            'errored' => 'Errored',
+            'diff_seconds' => 'Diff In Secs',
+            'on_device' => 'On Dev',
+            'to_polling' => 'To Polling',
+            'seconds' => 'Seconds',
+            'run_time' => 'Runtime',
+>>>>>>> e2be8260a7 (migrate sneck)
         ],
     ],
     'mempool' => [

@@ -25,6 +25,7 @@ readonly class GraphOptions
      * @param  list<Threshold>  $thresholds  reference lines, such as alert limits, those shown are always inside the value axis
      * @param  float  $scaleMargin  keep this fraction of the highest and lowest values of each line between them and the edge of an
      *                              autoscaled axis, so values that barely change still get a range with labels
+     * @param  int  $precision  decimal places of the legend values, 0 for counts
      */
     public function __construct(
         public ?float $scaleMin = null,
@@ -46,6 +47,7 @@ readonly class GraphOptions
         public array $thresholds = [],
         public float $scaleMargin = 0,
         public ?string $axisUnit = null,
+        public int $precision = 2,
     ) {
     }
 

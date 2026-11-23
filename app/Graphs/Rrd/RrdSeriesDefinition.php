@@ -18,8 +18,12 @@ use LibreNMS\Exceptions\NoGraphData;
  */
 class RrdSeriesDefinition
 {
+<<<<<<< HEAD
     private const int LABEL_WIDTH = 16;
     private const int PRECISION = 2;
+=======
+    public const int LABEL_WIDTH = 20;
+>>>>>>> e2be8260a7 (migrate sneck)
 
     /** @var array<string, array{suffix: string, cf: string}> legend columns and the value each one shows */
     private const array LEGEND_COLUMNS = [
@@ -493,6 +497,12 @@ class RrdSeriesDefinition
      */
     private function legendValues(string $id, string $unit, bool $sameValue = false): array
     {
+<<<<<<< HEAD
+=======
+        $unit = str_replace(['%', ':'], ['%%', '\\:'], $unit);
+        // the space takes the place of the prefix, so the columns line up either way
+        $format = '%5.' . $this->options->precision . 'lf' . ($this->options->unitsExponent === 0 ? ' ' : '%s') . $unit;
+>>>>>>> e2be8260a7 (migrate sneck)
         $values = [];
         foreach (self::LEGEND_COLUMNS as $column) {
             $values[] = $id . ($sameValue ? '' : $column['suffix']) . ":{$column['cf']}";

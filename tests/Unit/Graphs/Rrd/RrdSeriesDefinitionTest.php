@@ -488,6 +488,14 @@ class RrdSeriesDefinitionTest extends TestCase
         $this->assertSame("COMMENT:          Now          Min          Max          Avg\l", $definition[1]);
     }
 
+    public function test_precision_sets_the_decimals_of_the_legend_values(): void
+    {
+        $definition = $this->build(['a' => new DataSeries($this->metric, 'a', 'A')], new GraphOptions(precision: 0));
+
+        $this->assertContains('GPRINT:ds0:LAST:%5.0lf%s', $definition);
+        $this->assertContains('GPRINT:ds0:AVERAGE:%5.0lf%s\\n', $definition);
+    }
+
     public function test_it_skips_series_without_an_rrd_file(): void
     {
         $missing = new MetricIdentity('missing', ['hostname' => 'localhost']);
