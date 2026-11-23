@@ -6,7 +6,6 @@ class NtpClient extends ApplicationDefinition
 {
     public const string TYPE = 'ntp-client';
     protected const ?string NAME = 'NTP Client';
-    protected const ?string GRAPH_PREFIX = 'ntp_client';
 
     protected const ?array OVERVIEW = [
         'stats',

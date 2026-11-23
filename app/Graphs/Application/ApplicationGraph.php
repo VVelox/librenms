@@ -6,6 +6,7 @@ use App\Data\Graphing\GraphPageContext;
 use App\Data\TimeSeries\MetricIdentity;
 use App\Graphs\AbstractSeriesGraph;
 use App\Models\Application;
+use Illuminate\Support\Str;
 use LibreNMS\Exceptions\NoGraphData;
 
 /**
@@ -19,7 +20,7 @@ abstract class ApplicationGraph extends AbstractSeriesGraph
     {
         $application = $this->findApplication();
 
-        return $application !== null && $this->canView($application);
+        return $application !== null && $application->device !== null && $this->canView($application);
     }
 
     protected function validation(): array
@@ -35,13 +36,36 @@ abstract class ApplicationGraph extends AbstractSeriesGraph
     }
 
     /**
-     * The app-<app_type>-<app_id>.rrd file written by the application poller
+     * The device, the application and the graph, such as server1::Sneck::Run Time.
+     * The graph is named after the subtype without the graph prefix of the app, sneck_run_time is Run Time.
+     */
+    public function getTitle(): string
+    {
+        $application = $this->application();
+        $prefix = Str::after($application->definition()->graphType(''), 'application_') . '_';
+        $graph = Str::after($this->params->subtype, $prefix);
+
+        return $application->device?->shortDisplayName() . '::' . $application->displayName() . '::' . Str::title(str_replace('_', ' ', $graph));
+    }
+
+    /**
+     * @throws NoGraphData
+     */
+    protected function application(): Application
+    {
+        return $this->findApplication() ?? throw new NoGraphData;
+    }
+
+    /**
+     * The app-<app_type>-<app_id>.rrd file written by the application poller, or another file of the app when given tags
+     *
+     * @param  array<string, scalar>  $tags  tags after the app id, in the order the rrd file name holds them, see Application::metricIdentity()
      *
      * @throws NoGraphData
      */
-    protected function metric(): MetricIdentity
+    protected function metric(array $tags = []): MetricIdentity
     {
-        return ($this->findApplication() ?? throw new NoGraphData)->metricIdentity();
+        return $this->application()->metricIdentity($tags);
     }
 
     private function findApplication(): ?Application

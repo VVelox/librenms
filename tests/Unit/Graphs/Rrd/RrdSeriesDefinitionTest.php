@@ -492,7 +492,7 @@ class RrdSeriesDefinitionTest extends TestCase
     {
         $definition = $this->build(['a' => new DataSeries($this->metric, 'a', 'A')], new GraphOptions(precision: 0));
 
-        $this->assertContains('GPRINT:ds0:LAST:%5.0lf%s', $definition);
+        $this->assertContains('GPRINT:ds0:LAST: %7.0lf%s\g', $definition);
         $this->assertContains('GPRINT:ds0:AVERAGE:%5.0lf%s\\n', $definition);
     }
 

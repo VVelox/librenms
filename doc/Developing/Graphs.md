@@ -375,14 +375,6 @@ percentile. `TrafficOptions::series` limits the traffic summaries to some of
 the series: `app/Graphs/Device/BitsGraph.php` stacks the traffic of each port
 and only summarizes, and draws the percentiles of, the device totals.
 
-<<<<<<< HEAD
-For application graphs, extend `App\Graphs\Application\ApplicationGraph`;
-`$this->metric()` reads the `app-<app_type>-<app_id>.rrd` file the application
-poller writes. Graph class names can not contain hyphens, so an app such as
-`ntp-client` sets `GRAPH_PREFIX` in its `ApplicationDefinition` to name its
-graphs `application_ntp_client_*`. See
-`app/Graphs/Application/NtpClientOffsetGraph.php`.
-=======
 For application graphs, extend `App\Graphs\Application\ApplicationGraph`.
 `$this->metric()` reads the `app-<app_type>-<app_id>.rrd` file the
 application poller writes. For an app with more files, pass the parts that
@@ -391,12 +383,12 @@ follow the app id as tags, in order:
 `app-backupninja-<app_id>-overview.rrd`.
 A file with a part before the app id, such as `app-asterisk-stats-<app_id>.rrd`,
 needs its own `MetricIdentity` with the tags in that order.
-Graph names can not contain hyphens, so the graphs of an app such as
-`ntp-client` need to be named like `application_ntp_client_*`.
+Graph class names can not contain hyphens, so an app such as `syslog-ng` sets
+`GRAPH_PREFIX` in its `ApplicationDefinition` to name its graphs
+`application_syslog_ng_*`.
 `app/Graphs/Application/SneckResultsGraph.php` and
 `app/Graphs/Application/SneckRunTimeGraph.php` are examples, the latter
 reading `app-sneck-<app_id>-run_time.rrd`.
->>>>>>> e2be8260a7 (migrate sneck)
 
 For graph types outside device graphs, extend `AbstractSeriesGraph` and
 implement `isAuthorized()` for the entities being displayed, using `canView()`
